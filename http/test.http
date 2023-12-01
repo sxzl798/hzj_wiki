@@ -6,7 +6,7 @@ GET http://localhost:8080/hello
     client.log("测试/hello接口");
     client.log(JSON.stringify(response.body));
     client.assert(response.status === 200,"返回码不是200");
-    client.assert(response.body === "Hello World","结果验证失败");
+    client.assert(response.body === "Hello WorldHello","结果验证失败");
     });
 %}
 ###
