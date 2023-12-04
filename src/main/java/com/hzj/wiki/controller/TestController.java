@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/user")
 @Component
 public class TestController {
     //测试配置项
@@ -30,7 +31,7 @@ public class TestController {
     public  String helloPost(String name){
         return "Hello World Post,"+name;
     }
-    @GetMapping("/user/list")
+    @GetMapping("/list")
     public User list(){
         return userService.list();
     }
