@@ -18,3 +18,7 @@ name=Test
 
 ###
 
+GET http://localhost:8080/user/list
+
+###
+

@@ -5,4 +5,6 @@ CREATE TABLE IF NOT EXISTS `user`(
                                      `password` VARCHAR(20) NOT NULL COMMENT '密码'
 )ENGINE=INNODB DEFAULT CHARSET=UTF8MB4 COMMENT ='测试';
 
-SELECT 'id','name','password' FROM user;
+SELECT `id`,`username`,`password` FROM `user`;
+
+select `id`,`username`,`password` from `user`;
