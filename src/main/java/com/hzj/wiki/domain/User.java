@@ -2,7 +2,9 @@ package com.hzj.wiki.domain;
 
 public class User {
     private Integer id;
+
     private String username;
+
     private String password;
 
     public Integer getId() {
@@ -18,7 +20,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username == null ? null : username.trim();
     }
 
     public String getPassword() {
@@ -26,7 +28,6 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password == null ? null : password.trim();
     }
 }
-

@@ -1,10 +1,17 @@
 package com.hzj.wiki.mapper;
 
 import com.hzj.wiki.domain.User;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
-@Repository
 public interface UserMapper {
-    public List<User> list();
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(User row);
+
+    int insertSelective(User row);
+
+    User selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(User row);
+
+    int updateByPrimaryKey(User row);
 }
