@@ -4,14 +4,14 @@ import com.hzj.wiki.domain.User;
 import com.hzj.wiki.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
+@Component
 public class TestController {
     //测试配置项
     @Value("${test.hello:Test}")
@@ -31,7 +31,7 @@ public class TestController {
         return "Hello World Post,"+name;
     }
     @GetMapping("/user/list")
-    public List<User> list(){
+    public User list(){
         return userService.list();
     }
 }

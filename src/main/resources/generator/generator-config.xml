@@ -18,13 +18,32 @@
         <!--<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>-->
 
         <!-- 注释 -->
+        <!-- 实体类生成序列化属性-->
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+        <!-- 实体类重写HashCode()和equals()-->
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+        <!-- 实体类重写toString() -->
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
+        <!--生成mapper.xml时覆盖原文件-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin" />
         <commentGenerator>
             <!-- 是否不生成注释 -->
-            <property name="suppressAllComments" value="true"/>
+<!--            <property name="suppressAllComments" value="true"/>-->
             <!-- 不希望生成的注释中包含时间戳 -->
             <!--<property name="suppressDate" value="true"/>-->
             <!-- 添加 db 表中字段的注释，只有suppressAllComments为false时才生效-->
             <!--<property name="addRemarkComments" value="true"/>-->
+
+            <!-- 是否去除自动生成的注释 -->
+            <property name="suppressAllComments" value="true"/>
+            <!-- 生成注释是否带时间戳-->
+            <property name="suppressDate" value="true"/>
+            <!-- 生成的Java文件的编码格式 -->
+            <property name="javaFileEncoding" value="utf-8mb4"/>
+            <!-- 格式化java代码-->
+            <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
+            <!-- 格式化XML代码-->
+            <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
         </commentGenerator>
 
 
@@ -59,6 +78,8 @@
         <javaModelGenerator targetPackage="com.hzj.wiki.domain" targetProject="src/main/java">
             <!-- 是否让 schema 作为包的后缀，默认为false -->
             <!--<property name="enableSubPackages" value="false"/>-->
+            <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
+            <property name="enableSubPackages" value="true"/>
             <!-- 是否针对string类型的字段在set方法中进行修剪，默认false -->
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
@@ -66,12 +87,13 @@
 
         <!-- 生成Mapper.xml文件 -->
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
-            <!--<property name="enableSubPackages" value="false"/>-->
+            <property name="enableSubPackages" value="true"/>
+
         </sqlMapGenerator>
 
         <!-- 生成 XxxMapper.java 接口-->
         <javaClientGenerator targetPackage="com.hzj.wiki.mapper" targetProject="src/main/java" type="XMLMAPPER">
-            <!--<property name="enableSubPackages" value="false"/>-->
+            <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
 
