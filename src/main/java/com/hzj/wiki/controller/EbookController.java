@@ -1,7 +1,8 @@
 package com.hzj.wiki.controller;
 
-import com.hzj.wiki.domain.Ebook;
+import com.hzj.wiki.req.EbookReq;
 import com.hzj.wiki.resp.CommonResp;
+import com.hzj.wiki.resp.EbookResp;
 import com.hzj.wiki.service.EbookService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +18,10 @@ public class EbookController {
     @Resource
     private EbookService ebookService;
     @GetMapping("/list")
-    public CommonResp list()
+    public CommonResp list(EbookReq req)
     {
-        CommonResp<List<Ebook>> commonResp = new CommonResp<>();
-        List<Ebook> ebookList = ebookService.list();
+        CommonResp<List<EbookResp>> commonResp = new CommonResp<>();
+        List<EbookResp> ebookList = ebookService.list(req);
         commonResp.setContent(ebookList);
         return commonResp;
     }
