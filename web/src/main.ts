@@ -4,7 +4,10 @@ import router from './router'
 import store from './store'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
-import * as Icons from '@ant-design/icons-vue'
+import * as Icons from '@ant-design/icons-vue';
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.VUE_APP_SERVE;
 
 const app = createApp(App);
 
