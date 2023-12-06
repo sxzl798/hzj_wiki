@@ -354,73 +354,73 @@ public class EbookExample {
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionIsNull() {
-            addCriterion("desription is null");
+        public Criteria andDescriptionIsNull() {
+            addCriterion("description is null");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionIsNotNull() {
-            addCriterion("desription is not null");
+        public Criteria andDescriptionIsNotNull() {
+            addCriterion("description is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionEqualTo(String value) {
-            addCriterion("desription =", value, "desription");
+        public Criteria andDescriptionEqualTo(String value) {
+            addCriterion("description =", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionNotEqualTo(String value) {
-            addCriterion("desription <>", value, "desription");
+        public Criteria andDescriptionNotEqualTo(String value) {
+            addCriterion("description <>", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionGreaterThan(String value) {
-            addCriterion("desription >", value, "desription");
+        public Criteria andDescriptionGreaterThan(String value) {
+            addCriterion("description >", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionGreaterThanOrEqualTo(String value) {
-            addCriterion("desription >=", value, "desription");
+        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
+            addCriterion("description >=", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionLessThan(String value) {
-            addCriterion("desription <", value, "desription");
+        public Criteria andDescriptionLessThan(String value) {
+            addCriterion("description <", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionLessThanOrEqualTo(String value) {
-            addCriterion("desription <=", value, "desription");
+        public Criteria andDescriptionLessThanOrEqualTo(String value) {
+            addCriterion("description <=", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionLike(String value) {
-            addCriterion("desription like", value, "desription");
+        public Criteria andDescriptionLike(String value) {
+            addCriterion("description like", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionNotLike(String value) {
-            addCriterion("desription not like", value, "desription");
+        public Criteria andDescriptionNotLike(String value) {
+            addCriterion("description not like", value, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionIn(List<String> values) {
-            addCriterion("desription in", values, "desription");
+        public Criteria andDescriptionIn(List<String> values) {
+            addCriterion("description in", values, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionNotIn(List<String> values) {
-            addCriterion("desription not in", values, "desription");
+        public Criteria andDescriptionNotIn(List<String> values) {
+            addCriterion("description not in", values, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionBetween(String value1, String value2) {
-            addCriterion("desription between", value1, value2, "desription");
+        public Criteria andDescriptionBetween(String value1, String value2) {
+            addCriterion("description between", value1, value2, "description");
             return (Criteria) this;
         }
 
-        public Criteria andDesriptionNotBetween(String value1, String value2) {
-            addCriterion("desription not between", value1, value2, "desription");
+        public Criteria andDescriptionNotBetween(String value1, String value2) {
+            addCriterion("description not between", value1, value2, "description");
             return (Criteria) this;
         }
 

@@ -11,7 +11,7 @@ public class Ebook implements Serializable {
 
     private Long category2Id;
 
-    private String desription;
+    private String description;
 
     private String cover;
 
@@ -55,12 +55,12 @@ public class Ebook implements Serializable {
         this.category2Id = category2Id;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription == null ? null : desription.trim();
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
     }
 
     public String getCover() {
@@ -111,7 +111,7 @@ public class Ebook implements Serializable {
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getCategoryId() == null ? other.getCategoryId() == null : this.getCategoryId().equals(other.getCategoryId()))
             && (this.getCategory2Id() == null ? other.getCategory2Id() == null : this.getCategory2Id().equals(other.getCategory2Id()))
-            && (this.getDesription() == null ? other.getDesription() == null : this.getDesription().equals(other.getDesription()))
+            && (this.getDescription() == null ? other.getDescription() == null : this.getDescription().equals(other.getDescription()))
             && (this.getCover() == null ? other.getCover() == null : this.getCover().equals(other.getCover()))
             && (this.getDocCount() == null ? other.getDocCount() == null : this.getDocCount().equals(other.getDocCount()))
             && (this.getViewCount() == null ? other.getViewCount() == null : this.getViewCount().equals(other.getViewCount()))
@@ -126,7 +126,7 @@ public class Ebook implements Serializable {
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getCategoryId() == null) ? 0 : getCategoryId().hashCode());
         result = prime * result + ((getCategory2Id() == null) ? 0 : getCategory2Id().hashCode());
-        result = prime * result + ((getDesription() == null) ? 0 : getDesription().hashCode());
+        result = prime * result + ((getDescription() == null) ? 0 : getDescription().hashCode());
         result = prime * result + ((getCover() == null) ? 0 : getCover().hashCode());
         result = prime * result + ((getDocCount() == null) ? 0 : getDocCount().hashCode());
         result = prime * result + ((getViewCount() == null) ? 0 : getViewCount().hashCode());
@@ -144,7 +144,7 @@ public class Ebook implements Serializable {
         sb.append(", name=").append(name);
         sb.append(", categoryId=").append(categoryId);
         sb.append(", category2Id=").append(category2Id);
-        sb.append(", desription=").append(desription);
+        sb.append(", description=").append(description);
         sb.append(", cover=").append(cover);
         sb.append(", docCount=").append(docCount);
         sb.append(", viewCount=").append(viewCount);
