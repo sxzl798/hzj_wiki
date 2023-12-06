@@ -2,8 +2,6 @@
   <a-layout>
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
       >
@@ -56,9 +54,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons-vue"; // @ is an alias to /src
-
+import axios from "axios";
 export default defineComponent({
   name: 'HomeView',
+  setup(){
+    console.log("setup");
+    axios.get("http://localhost:8080/ebook/list?name=Spring").then((response)=>{
+      console.log(response);
+    })
+  },
   components: {
     NotificationOutlined, LaptopOutlined, UserOutlined,
   },
