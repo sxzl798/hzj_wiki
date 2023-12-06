@@ -2,3 +2,5 @@ GET http://localhost:8080/ebook/list?name=Spring
 Accept: application/json
 
 ###
+GET http://192.168.15.171:8080/ebook/list?name=Spring
+Accept: application/json
