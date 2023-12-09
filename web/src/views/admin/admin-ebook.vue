@@ -88,6 +88,7 @@
       const handleQuery = (params: any) => {
         loading.value = true;
         axios.get("/ebook/list", {
+          //将原本的params参数展开，成为get请求参数中的参数
           params:{
             page: params.page,
             size: params.size

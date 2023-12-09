@@ -76,19 +76,19 @@ import {LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/ic
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import axios from "axios";
 
-const listData: Record<string, string>[] = [];
-
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
+// const listData: Record<string, string>[] = [];
+//
+// for (let i = 0; i < 23; i++) {
+//   listData.push({
+//     href: 'https://www.antdv.com/',
+//     title: `ant design vue part ${i}`,
+//     avatar: 'https://joeschmoe.io/api/v1/random',
+//     description:
+//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
+//     content:
+//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+//   });
+// }
 
 const pagination = {
   onChange: (page: number) => {
@@ -108,16 +108,22 @@ export default defineComponent({
     const ebooks1 = reactive({books:[]});
 
     onMounted(()=>{
-      axios.get("/ebook/list").then((response)=>{
+      axios.get("/ebook/list",{
+        params:{
+          page:1,
+          size:1000
+        }
+      }).then((response)=>{
         const data = response.data;
-        ebooks.value = data.content;
-        ebooks1.books = data.content;
+        ebooks.value = data.content.list;
+        ebooks.value.total = data.content.total;
+        // ebooks1.books = data.content;
       });
     });
     return {
       ebooks,
-      ebooks2: toRef(ebooks1,"books"),
-      listData,
+      // ebooks2: toRef(ebooks1,"books"),
+      // listData,
       pagination:{
         onChange: (page:any) => {
           console.log(page);
