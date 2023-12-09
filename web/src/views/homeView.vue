@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent ,onMounted ,ref ,reactive ,toRef} from 'vue';
+import { defineComponent ,onMounted ,ref} from 'vue';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons-vue"; // @ is an alias to /src
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import axios from "axios";
@@ -90,12 +90,12 @@ import axios from "axios";
 //   });
 // }
 
-const pagination = {
-  onChange: (page: number) => {
-    console.log(page);
-  },
-  pageSize: 3,
-};
+// const pagination = {
+//   onChange: (page: number) => {
+//     console.log(page);
+//   },
+//   pageSize: 3,
+// };
 const actions: Record<string, any>[] = [
   { icon: StarOutlined, text: '156' },
   { icon: LikeOutlined, text: '156' },
@@ -105,7 +105,7 @@ export default defineComponent({
   name: 'HomeView',
   setup(){
     const ebooks = ref();
-    const ebooks1 = reactive({books:[]});
+    // const ebooks1 = reactive({books:[]});
 
     onMounted(()=>{
       axios.get("/ebook/list",{
