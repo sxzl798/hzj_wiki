@@ -10,6 +10,7 @@ import com.hzj.wiki.req.EbookSaveReq;
 import com.hzj.wiki.resp.EbookQueryResp;
 import com.hzj.wiki.resp.PageResp;
 import com.hzj.wiki.util.CopyUtil;
+import com.hzj.wiki.util.SnowFlake;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
     public PageResp<EbookQueryResp> list(EbookQueryReq req){
 
         EbookExample ebookExample = new EbookExample();
@@ -53,6 +57,8 @@ public class EbookService {
         Ebook ebook = CopyUtil.copy(saveReq,Ebook.class);
         if (ObjectUtils.isEmpty(saveReq.getId())){
             //新增
+
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else{
             ebookMapper.updateByPrimaryKey(ebook);

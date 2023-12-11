@@ -4,6 +4,12 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
 
+      <p>
+        <a-button type="primary" @click="add()" size="large">
+          新增
+        </a-button>
+      </p>
+
       <a-table
           :columns="columns"
           :data-source="ebooks"
@@ -46,7 +52,7 @@
 
           <template v-else-if="column.key === 'action'">
             <span>
-          <a @click="showModal(record)">编辑</a>
+          <a @click="edit(record)">编辑</a>
           <a-divider type="vertical" />
           <a>删除</a>
 
@@ -183,10 +189,15 @@ import type { UnwrapRef } from 'vue';
 
 //modal
 
-
-    const showModal = (record :any) => {
+    //编辑
+    const edit = (record :any) => {
       open.value = true;
       ebook.value = record;
+    };
+    //新增
+    const add = () => {
+      open.value = true;
+      ebook.value = {};
     };
 
     const handleOk = (e: MouseEvent) => {
