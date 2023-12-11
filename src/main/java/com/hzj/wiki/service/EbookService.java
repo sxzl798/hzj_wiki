@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.hzj.wiki.domain.Ebook;
 import com.hzj.wiki.domain.EbookExample;
 import com.hzj.wiki.mapper.EbookMapper;
-import com.hzj.wiki.req.EbookReq;
-import com.hzj.wiki.resp.EbookResp;
+import com.hzj.wiki.req.EbookQueryReq;
+import com.hzj.wiki.req.EbookSaveReq;
+import com.hzj.wiki.resp.EbookQueryResp;
 import com.hzj.wiki.resp.PageResp;
 import com.hzj.wiki.util.CopyUtil;
 import jakarta.annotation.Resource;
@@ -22,7 +23,7 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookMapper ebookMapper;
-    public PageResp<EbookResp> list(EbookReq req){
+    public PageResp<EbookQueryResp> list(EbookQueryReq req){
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
@@ -38,17 +39,23 @@ public class EbookService {
         LOG.info("总页数：{}",pageInfo.getPages());
 
 
-//        List<EbookResp> respList = new ArrayList<>();
-//        for (Ebook ebook : ebookList) {
-//            EbookResp ebookResp = new EbookResp();
-//            BeanUtils.copyProperties(ebook,ebookResp);
-//            respList.add(ebookResp);
-//        }
-        List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        List<EbookQueryResp> respList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(respList);
 
         return pageResp;
+    }
+    /*
+    保存
+     */
+    public void save(EbookSaveReq saveReq){
+        Ebook ebook = CopyUtil.copy(saveReq,Ebook.class);
+        if (ObjectUtils.isEmpty(saveReq.getId())){
+            //新增
+            ebookMapper.insert(ebook);
+        }else{
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }

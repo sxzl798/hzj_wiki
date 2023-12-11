@@ -62,7 +62,19 @@
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.4.6</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>mybatis-spring-boot-starter</artifactId>
+					<groupId>org.mybatis.spring.boot</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
 
 	</dependencies>
 

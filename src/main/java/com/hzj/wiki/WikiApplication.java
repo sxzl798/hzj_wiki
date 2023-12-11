@@ -7,9 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
-@SpringBootApplication
-@MapperScan("com.hzj.wiki.mapper")
 
+@MapperScan("com.hzj.wiki.mapper")
+@SpringBootApplication
 public class WikiApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
 	public static void main(String[] args) {
