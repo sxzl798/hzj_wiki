@@ -3,12 +3,36 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-
       <p>
-        <a-button type="primary" @click="add()" size="large">
-          新增
-        </a-button>
+      <a-form
+          layout="inline" :model="param"
+      >
+        <a-form-item>
+          <a-input v-model:value="param.name" placeholder="名称">
+            <template ><UserOutlined style="color: rgba(0, 0, 0, 0.25)" /></template>
+          </a-input>
+        </a-form-item>
+
+        <a-form-item>
+
+          <a-button type="primary"
+                    :icon="h(SearchOutlined)"
+                    @click="handleQuery({page:1,size:pagination.pageSize})"
+          >
+            查询
+          </a-button>
+
+        </a-form-item>
+        <a-form-item>
+          <a-button type="primary" @click="add()">
+            新增
+          </a-button>
+        </a-form-item>
+
+
+      </a-form>
       </p>
+
 
       <a-table
           :columns="columns"
@@ -107,6 +131,10 @@ import { reactive, toRaw } from 'vue';
 import type { UnwrapRef } from 'vue';
 import {message} from "ant-design-vue";
 import router from "@/router";
+import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
+import type { FormProps } from 'ant-design-vue';
+import { h } from 'vue';
+import { SearchOutlined } from '@ant-design/icons-vue';
 
     const ebooks = ref();
     const loading= ref<boolean>(false);
@@ -120,6 +148,12 @@ import router from "@/router";
   const confirmLoading = ref<boolean>(false);
   const ebook = ref({});
 
+//内联表单
+const param = ref();
+param.value={};
+
+//内联表单
+
     //table
 
     //数据查询
@@ -129,7 +163,8 @@ import router from "@/router";
         //将原本的params参数展开，成为get请求参数中的参数
         params:{
           page: params.page,
-          size: params.size
+          size: params.size,
+          name: param.value.name
         }
       }).then((response) => {
         loading.value = false;
@@ -254,23 +289,13 @@ import router from "@/router";
 //form
 //数据源
 
-interface FormState {
-  name: string;
-  delivery: boolean;
-  type: string[];
-  resource: string;
-  desc: string;
-}
-const formState: UnwrapRef<FormState> = reactive({
-  name: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-});
+
+
 const labelCol = { style: { width: '150px' } };
 const wrapperCol = { span: 14 };
 //form
+
+
 
 
 
