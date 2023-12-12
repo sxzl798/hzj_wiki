@@ -17,7 +17,7 @@
 
           <a-button type="primary"
                     :icon="h(SearchOutlined)"
-                    @click="handleQuery()"
+                    @click="handleQueryCategory()"
           >
             查询
           </a-button>
@@ -168,7 +168,7 @@ param.value={};
 const level1 = ref();
 
     //数据查询
-    const handleQuery = () => {
+    const handleQueryCategory = () => {
       loading.value = true;
       axios.get("/category/all").then((response) => {
         loading.value = false;
@@ -237,7 +237,7 @@ const level1 = ref();
         if (data.success){
           // router.go(0);
           //重新加载列表
-          handleQuery();
+          handleQueryCategory();
 
         }
       });
@@ -251,7 +251,7 @@ const level1 = ref();
         if (data.success){
           open.value = false;
           //重新加载列表
-          handleQuery();
+          handleQueryCategory();
         }else {
           message.error(data.message);
         }
@@ -274,7 +274,7 @@ const wrapperCol = { span: 14 };
 
 
     onMounted(() => {
-      handleQuery();
+      handleQueryCategory();
     });
 
 </script>
