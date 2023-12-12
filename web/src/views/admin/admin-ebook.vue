@@ -234,15 +234,17 @@ import router from "@/router";
     const handleOk = (e: MouseEvent) => {
       confirmLoading.value = true;
       axios.post("/ebook/save",ebook.value).then((response)=>{
+        confirmLoading.value=false;
         const data = response.data;
         if (data.success){
           open.value = false;
-          confirmLoading.value = false;
           //重新加载列表
           handleQuery({
             page:pagination.value.current,
             size:pagination.value.pageSize,
           });
+        }else {
+          message.error(data.message);
         }
       });
     };
