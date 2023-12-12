@@ -105,6 +105,7 @@ import {onMounted ,ref} from 'vue';
 import axios from "axios";
 import { reactive, toRaw } from 'vue';
 import type { UnwrapRef } from 'vue';
+import {message} from "ant-design-vue";
 import router from "@/router";
 
     const ebooks = ref();
@@ -133,10 +134,15 @@ import router from "@/router";
       }).then((response) => {
         loading.value = false;
         const data = response.data;
-        ebooks.value = data.content.list;
-        //重置分页按钮
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+        if (data.success){
+          ebooks.value = data.content.list;
+          //重置分页按钮
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        }else {
+          message.error(data.message);
+        }
+
       });
     };
 
@@ -214,12 +220,13 @@ import router from "@/router";
       axios.delete("/ebook/delete/" + id).then((response)=>{
         const data = response.data;
         if (data.success){
+          // router.go(0);
           //重新加载列表
           handleQuery({
             page:pagination.value.current,
             size:pagination.value.pageSize,
           });
-          router.go(0);
+
         }
       });
     };

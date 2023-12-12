@@ -46,7 +46,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 16, column: 3 }" :pagination="pagination" :data-source="ebooks">
+      <a-list item-layout="vertical" size="large" :grid="{ gutter: 16, column: 2 }" :pagination="pagination" :data-source="ebooks">
 
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -111,7 +111,7 @@ export default defineComponent({
       axios.get("/ebook/list",{
         params:{
           page:1,
-          size:1000
+          size:10
         }
       }).then((response)=>{
         const data = response.data;

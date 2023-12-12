@@ -7,6 +7,7 @@ import com.hzj.wiki.resp.EbookQueryResp;
 import com.hzj.wiki.resp.PageResp;
 import com.hzj.wiki.service.EbookService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,7 +16,7 @@ public class EbookController {
     @Resource
     private EbookService ebookService;
     @GetMapping("/list")
-    public CommonResp list(EbookQueryReq req)
+    public CommonResp list(@Valid EbookQueryReq req)
     {
         CommonResp<PageResp<EbookQueryResp>> commonResp = new CommonResp<>();
         PageResp<EbookQueryResp> ebookList = ebookService.list(req);
