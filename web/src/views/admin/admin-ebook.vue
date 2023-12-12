@@ -135,6 +135,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import type { FormProps } from 'ant-design-vue';
 import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
+import {Tool} from "@/util/tool";
 
     const ebooks = ref();
     const loading= ref<boolean>(false);
@@ -242,7 +243,7 @@ param.value={};
     //编辑
     const edit = (record :any) => {
       open.value = true;
-      ebook.value = record;
+      ebook.value = Tool.copy(record);
     };
     //新增
     const add = () => {
