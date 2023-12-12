@@ -36,7 +36,7 @@
 
       <a-table
           :columns="columns"
-          :data-source="ebooks"
+          :data-source="categorys"
           :row-key="record=>record.id"
           :pagination="pagination"
           :loading="loading"
@@ -99,23 +99,19 @@
     </a-layout-content>
   </a-layout>
 
-  <a-modal v-model:open="open" title="电子书编辑" :confirm-loading="confirmLoading" @ok="handleOk">
-    <a-form :model="ebook" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
+  <a-modal v-model:open="open" title="分类编辑" :confirm-loading="confirmLoading" @ok="handleOk">
+    <a-form :model="category" :label-col="labelCol" :wrapper-col="wrapperCol">
+
       <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
+        <a-input v-model:value="category.name" />
       </a-form-item>
-      <a-form-item label="分类一">
-        <a-input v-model:value="ebook.categoryId" />
+      <a-form-item label="父分类">
+        <a-input v-model:value="category.parent" />
       </a-form-item>
-      <a-form-item label="分类二">
-        <a-input v-model:value="ebook.category2Id" />
+      <a-form-item label="顺序">
+        <a-input v-model:value="category.sort" />
       </a-form-item>
-      <a-form-item label="描述">
-        <a-textarea v-model:value="ebook.description" type="text"/>
-      </a-form-item>
+
 <!--      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">-->
 <!--        <a-button type="primary" @click="onSubmit">Create</a-button>-->
 <!--        <a-button style="margin-left: 10px">Cancel</a-button>-->
@@ -127,17 +123,13 @@
 <script lang="ts" setup>
 import {onMounted ,ref} from 'vue';
 import axios from "axios";
-import { reactive, toRaw } from 'vue';
-import type { UnwrapRef } from 'vue';
 import {message} from "ant-design-vue";
-import router from "@/router";
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import type { FormProps } from 'ant-design-vue';
+import { UserOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
 
-    const ebooks = ref();
+    const categorys = ref();
     const loading= ref<boolean>(false);
     const pagination = ref({
       current: 1,
@@ -147,7 +139,7 @@ import {Tool} from "@/util/tool";
 
   const open = ref<boolean>(false);
   const confirmLoading = ref<boolean>(false);
-  const ebook = ref({});
+  const category = ref({});
 
 //内联表单
 const param = ref();
@@ -160,7 +152,7 @@ param.value={};
     //数据查询
     const handleQuery = (params: any) => {
       loading.value = true;
-      axios.get("/ebook/list", {
+      axios.get("/category/list", {
         //将原本的params参数展开，成为get请求参数中的参数
         params:{
           page: params.page,
@@ -171,7 +163,7 @@ param.value={};
         loading.value = false;
         const data = response.data;
         if (data.success){
-          ebooks.value = data.content.list;
+          categorys.value = data.content.list;
           //重置分页按钮
           pagination.value.current = params.page;
           pagination.value.total = data.content.total;
@@ -193,40 +185,21 @@ param.value={};
 
 
     const columns = [
-      {
-        name: '封面',
-        dataIndex: 'cover',
-        key: 'cover',
-      },
+
       {
         title: '名称',
         dataIndex: 'name',
         key: 'name',
       },
       {
-        title: '分类一',
-        dataIndex: 'categoryId',
-        key: 'categoryId',
+        title: '父分类',
+        dataIndex: 'parent',
+        key: 'parent',
       },
       {
-        title: '分类二',
-        dataIndex: 'category2Id',
-        key: 'category2Id',
-      },
-      {
-        title: '文档数',
-        dataIndex: 'docCount',
-        key: 'docCount',
-      },
-      {
-        title: '阅读数',
-        dataIndex: 'viewCount',
-        key: 'viewCount',
-      },
-      {
-        title: '点赞数',
-        dataIndex: 'voteCount',
-        key: 'voteCount',
+        title: '顺序',
+        dataIndex: 'sort',
+        key: 'sort',
       },
       {
         title: 'Action',
@@ -243,17 +216,17 @@ param.value={};
     //编辑
     const edit = (record :any) => {
       open.value = true;
-      ebook.value = Tool.copy(record);
+      category.value = Tool.copy(record);
     };
     //新增
     const add = () => {
       open.value = true;
-      ebook.value = {};
+      category.value = {};
     };
 
     //删除
     const handleDelete= (id: number) => {
-      axios.delete("/ebook/delete/" + id).then((response)=>{
+      axios.delete("/category/delete/" + id).then((response)=>{
         const data = response.data;
         if (data.success){
           // router.go(0);
@@ -269,7 +242,7 @@ param.value={};
 
     const handleOk = (e: MouseEvent) => {
       confirmLoading.value = true;
-      axios.post("/ebook/save",ebook.value).then((response)=>{
+      axios.post("/category/save",category.value).then((response)=>{
         confirmLoading.value=false;
         const data = response.data;
         if (data.success){
