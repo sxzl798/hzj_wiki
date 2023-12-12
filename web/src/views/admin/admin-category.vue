@@ -36,7 +36,7 @@
 
       <a-table
           :columns="columns"
-          :data-source="categorys"
+          :data-source="level1"
           :row-key="record=>record.id"
           :loading="loading"
           :pagination="false"
@@ -128,12 +128,12 @@ import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
 
-    const categorys = ref();
-    const loading= ref<boolean>(false);
+const categorys = ref();
+const loading= ref<boolean>(false);
 
-  const open = ref<boolean>(false);
-  const confirmLoading = ref<boolean>(false);
-  const category = ref({});
+const open = ref<boolean>(false);
+const confirmLoading = ref<boolean>(false);
+const category = ref({});
 
 //内联表单
 const param = ref();
@@ -142,6 +142,18 @@ param.value={};
 //内联表单
 
     //table
+/**
+ * 一级分类树，children属性就是二级分类
+ * [{
+ *   id:"",
+ *   name:"",
+ *   children:[{
+ *     id:"",
+ *     name:"",
+ *   }]
+ * }]
+ */
+const level1 = ref();
 
     //数据查询
     const handleQuery = () => {
@@ -151,7 +163,11 @@ param.value={};
         const data = response.data;
         if (data.success){
           categorys.value = data.content;
-          //重置分页按钮
+          console.log("原始数组：",categorys.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys.value,0);
+          console.log("树形结构：",level1);
         }else {
           message.error(data.message);
         }
@@ -159,7 +175,7 @@ param.value={};
       });
     };
 
-    //表格点击页码时触发
+
 
 
     const columns = [
