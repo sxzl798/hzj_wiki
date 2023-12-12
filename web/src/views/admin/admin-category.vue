@@ -17,7 +17,7 @@
 
           <a-button type="primary"
                     :icon="h(SearchOutlined)"
-                    @click="handleQuery({page:1,size:pagination.pageSize})"
+                    @click="handleQuery()"
           >
             查询
           </a-button>
@@ -38,9 +38,8 @@
           :columns="columns"
           :data-source="categorys"
           :row-key="record=>record.id"
-          :pagination="pagination"
           :loading="loading"
-          @change = "handleTableChange"
+          :pagination="false"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -131,11 +130,6 @@ import {Tool} from "@/util/tool";
 
     const categorys = ref();
     const loading= ref<boolean>(false);
-    const pagination = ref({
-      current: 1,
-      pageSize: 5,
-      total: 0
-    });
 
   const open = ref<boolean>(false);
   const confirmLoading = ref<boolean>(false);
@@ -150,23 +144,14 @@ param.value={};
     //table
 
     //数据查询
-    const handleQuery = (params: any) => {
+    const handleQuery = () => {
       loading.value = true;
-      axios.get("/category/list", {
-        //将原本的params参数展开，成为get请求参数中的参数
-        params:{
-          page: params.page,
-          size: params.size,
-          name: param.value.name
-        }
-      }).then((response) => {
+      axios.get("/category/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success){
-          categorys.value = data.content.list;
+          categorys.value = data.content;
           //重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
         }else {
           message.error(data.message);
         }
@@ -175,13 +160,6 @@ param.value={};
     };
 
     //表格点击页码时触发
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有哪些：" + pagination);
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
-      });
-    };
 
 
     const columns = [
@@ -231,10 +209,7 @@ param.value={};
         if (data.success){
           // router.go(0);
           //重新加载列表
-          handleQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          });
+          handleQuery();
 
         }
       });
@@ -248,10 +223,7 @@ param.value={};
         if (data.success){
           open.value = false;
           //重新加载列表
-          handleQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          });
+          handleQuery();
         }else {
           message.error(data.message);
         }
@@ -274,10 +246,7 @@ const wrapperCol = { span: 14 };
 
 
     onMounted(() => {
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
+      handleQuery();
     });
 
 </script>
