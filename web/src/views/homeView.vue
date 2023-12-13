@@ -7,16 +7,16 @@
           @click = "handleClick"
 
       >
-        <a-menu-item key="welcome">
-          <router-link to="/">
+        <a-menu-item key="welcome" @click="handleWelcomeOn">
+<!--          <router-link to="/">-->
             <SmileTwoTone />
               <span>欢迎</span>
-          </router-link>
+<!--          </router-link>-->
         </a-menu-item>
 
-        <a-sub-menu v-for="item in level1" :key="item.id">
+        <a-sub-menu v-for="item in level1" :key="item.id" @click = "handleWelcomeOff">
           <template v-slot:title>
-            <span><TagsTwoTone />{{item.name}}</span>
+            <TagsTwoTone /><span>{{item.name}}</span>
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
             <TagTwoTone /><span>{{child.name}}</span>
@@ -27,7 +27,23 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-list item-layout="vertical" size="large" :grid="{ gutter: 16, column: 2 }" :pagination="pagination" :data-source="ebooks">
+
+      <div class="welcome" v-show="isShowWelcome"
+      style="display: table-cell;
+            /*垂直居中 */
+            vertical-align: middle;
+            /*水平居中*/
+            text-align: center;">
+        <h1>欢迎使用【添砖Java】学城</h1>
+        <a-image :width="400" src="/image/tzJava.png"/>
+        
+      </div>
+      <a-list item-layout="vertical" size="large"
+              :grid="{ gutter: 16, column: 2 }"
+              :pagination="pagination"
+              :data-source="ebooks"
+              v-show="!(isShowWelcome)"
+      >
 
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
@@ -47,6 +63,7 @@
           </a-list-item>
         </template>
       </a-list>
+
     </a-layout-content>
   </a-layout>
 </template>
@@ -102,9 +119,20 @@ const handleClick = () =>{
   console.log("menu click")
 };
 
+const isShowWelcome = ref<boolean>(false);
+
+const handleWelcomeOn = ()=> {
+  isShowWelcome.value = true;
+};
+const handleWelcomeOff = ()=> {
+  isShowWelcome.value = false;
+};
+
+
 
 onMounted(()=>{
   handleQueryCategory();
+  isShowWelcome.value = true;
 
 });
 
