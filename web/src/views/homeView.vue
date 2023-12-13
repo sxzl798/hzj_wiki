@@ -5,18 +5,21 @@
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
           @click = "handleClick"
-
       >
-        <a-menu-item key="welcome" @click="handleWelcomeOn">
-<!--          <router-link to="/">-->
+        <a-menu-item key="welcome" >
+          <router-link to="/">
             <SmileTwoTone />
-              <span>欢迎</span>
-<!--          </router-link>-->
+            <span>欢迎</span>
+          </router-link>
+
         </a-menu-item>
 
-        <a-sub-menu v-for="item in level1" :key="item.id" @click = "handleWelcomeOff">
+        <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
-            <TagsTwoTone /><span>{{item.name}}</span>
+            <a-button type="text" @click="handleClickItem(item.id)">
+              <TagsTwoTone /><span >{{item.name}}</span>
+            </a-button>
+
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
             <TagTwoTone /><span>{{child.name}}</span>
@@ -28,21 +31,9 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
 
-      <div class="welcome" v-show="isShowWelcome"
-      style="display: table-cell;
-            /*垂直居中 */
-            vertical-align: middle;
-            /*水平居中*/
-            text-align: center;">
-        <h1>欢迎使用【添砖Java】学城</h1>
-        <a-image :width="400" src="/image/tzJava.png"/>
-        
-      </div>
       <a-list item-layout="vertical" size="large"
               :grid="{ gutter: 16, column: 2 }"
-              :pagination="pagination"
               :data-source="ebooks"
-              v-show="!(isShowWelcome)"
       >
 
         <template #renderItem="{ item }">
@@ -71,7 +62,7 @@
 <script lang="ts" setup>
 import { onMounted ,ref} from 'vue';
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import axios from "axios";
+import axios, {valueOf} from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 
@@ -86,15 +77,40 @@ const ebooks = ref();
 const level1 = ref();
 let categorys: any;
 
-const isShowWelcome = ref<boolean>(false);
 let categoryId2 = 0;
+let categoryId = 0;
 
 const handleQueryEbook = () =>{
   axios.get("/ebook/list",{
     params:{
       page:1,
       size:10,
+    }
+  }).then((response)=>{
+    const data = response.data;
+    ebooks.value = data.content.list;
+    ebooks.value.total = data.content.total;
+  });
+}
+const handleQueryEbookByCategoryId2 = () =>{
+  axios.get("/ebook/list",{
+    params:{
+      page:1,
+      size:10,
       category2Id:categoryId2,
+    }
+  }).then((response)=>{
+    const data = response.data;
+    ebooks.value = data.content.list;
+    ebooks.value.total = data.content.total;
+  });
+}
+const handleQueryEbookByCategoryId = () =>{
+  axios.get("/ebook/list",{
+    params:{
+      page:1,
+      size:10,
+      categoryId:categoryId,
     }
   }).then((response)=>{
     const data = response.data;
@@ -124,25 +140,24 @@ const handleQueryCategory = () => {
 
 const handleClick = (value:any) =>{
   // console.log("menu click")
-  if (value.key === 'welcome'){
-    isShowWelcome.value = true;
-  }else {
+  if (!(value.key === 'welcome')){
     categoryId2 = value.key;
-    isShowWelcome.value = false;
+    handleQueryEbookByCategoryId2();
+  }else {
     handleQueryEbook();
   }
+
 };
 
+const handleClickItem = (value:number) =>{
+  console.log(value);
+  categoryId=value;
+  handleQueryEbookByCategoryId();
+}
 
-const handleWelcomeOn = ()=> {
-  isShowWelcome.value = true;
-};
-const handleWelcomeOff = ()=> {
-  isShowWelcome.value = false;
-};
+
 
 onMounted(()=>{
-  isShowWelcome.value = true;
   handleQueryCategory();
 });
 
