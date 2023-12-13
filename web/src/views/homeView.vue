@@ -79,7 +79,18 @@ const handleQueryCategory = () => {
 
       level1.value = [];
       level1.value = Tool.array2Tree(categorys,0);
-      console.log("树形结构：",level1);
+      console.log("树形结构：",level1.value);
+
+      axios.get("/ebook/list",{
+        params:{
+          page:1,
+          size:10
+        }
+      }).then((response)=>{
+        const data = response.data;
+        ebooks.value = data.content.list;
+        ebooks.value.total = data.content.total;
+      });
     }else {
       message.error(data.message);
     }
@@ -94,16 +105,7 @@ const handleClick = () =>{
 
 onMounted(()=>{
   handleQueryCategory();
-  axios.get("/ebook/list",{
-    params:{
-      page:1,
-      size:10
-    }
-  }).then((response)=>{
-    const data = response.data;
-    ebooks.value = data.content.list;
-    ebooks.value.total = data.content.total;
-  });
+
 });
 
 
