@@ -243,7 +243,7 @@ const level1 = ref();
       });
     };
 
-    const handleOk = (e: MouseEvent) => {
+    const handleOk = () => {
       confirmLoading.value = true;
       axios.post("/category/save",category.value).then((response)=>{
         confirmLoading.value=false;

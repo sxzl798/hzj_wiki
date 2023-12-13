@@ -51,6 +51,13 @@
           </template>
         </template>
 
+        <template v-slot:category="{ text,record }">
+            <span>
+              {{getCategoryName(record.categoryId)}}/{{getCategoryName(record.category2Id)}}
+            </span>
+        </template>
+
+
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
             <a>
@@ -127,12 +134,8 @@
 <script lang="ts" setup>
 import {onMounted ,ref} from 'vue';
 import axios from "axios";
-import { reactive, toRaw } from 'vue';
-import type { UnwrapRef } from 'vue';
 import {message} from "ant-design-vue";
-import router from "@/router";
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import type { FormProps } from 'ant-design-vue';
+import { UserOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
@@ -211,14 +214,8 @@ param.value={};
         key: 'name',
       },
       {
-        title: '分类一',
-        dataIndex: 'categoryId',
-        key: 'categoryId',
-      },
-      {
-        title: '分类二',
-        dataIndex: 'category2Id',
-        key: 'category2Id',
+        title: '分类',
+        slots: { customRender: "category" },
       },
       {
         title: '文档数',
@@ -276,7 +273,7 @@ const categoryIds = ref();
       });
     };
 
-    const handleOk = (e: MouseEvent) => {
+    const handleOk = () => {
       confirmLoading.value = true;
       ebook.value.categoryId = categoryIds.value[0];
       ebook.value.category2Id = categoryIds.value[1];
@@ -309,6 +306,7 @@ const wrapperCol = { span: 14 };
 //form
 
 const level1 = ref();
+let categorys: any;
 
 //数据查询
 const handleQueryCategory = () => {
@@ -317,7 +315,7 @@ const handleQueryCategory = () => {
     loading.value = false;
     const data = response.data;
     if (data.success){
-      const categorys = data.content;
+      categorys = data.content;
       console.log("原始数组：",categorys);
 
       level1.value = [];
@@ -330,9 +328,16 @@ const handleQueryCategory = () => {
   });
 };
 
-
-
-
+const getCategoryName = (cid: number) => {
+  let result = "";
+  categorys.forEach((item:any) => {
+    if (item.id === cid){
+      //return item.name; //注意：这里直接return不起作用
+      result = item.name;
+    }
+  });
+  return result;
+};
 
     onMounted(() => {
       handleQueryCategory();
