@@ -5,7 +5,24 @@ public class EbookQueryReq extends PageReq{
 
     private String name = null;
 
+    private Long category2Id;
 
+    @Override
+    public String toString() {
+        return "EbookQueryReq{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category2Id=" + category2Id +
+                "} " + super.toString();
+    }
+
+    public Long getCategory2Id() {
+        return category2Id;
+    }
+
+    public void setCategory2Id(Long category2Id) {
+        this.category2Id = category2Id;
+    }
 
     public Long getId() {
         return id;

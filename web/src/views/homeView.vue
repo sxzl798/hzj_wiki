@@ -86,6 +86,23 @@ const ebooks = ref();
 const level1 = ref();
 let categorys: any;
 
+const isShowWelcome = ref<boolean>(false);
+let categoryId2 = 0;
+
+const handleQueryEbook = () =>{
+  axios.get("/ebook/list",{
+    params:{
+      page:1,
+      size:10,
+      category2Id:categoryId2,
+    }
+  }).then((response)=>{
+    const data = response.data;
+    ebooks.value = data.content.list;
+    ebooks.value.total = data.content.total;
+  });
+}
+
 //数据查询
 const handleQueryCategory = () => {
   axios.get("/category/all").then((response) => {
@@ -97,17 +114,7 @@ const handleQueryCategory = () => {
       level1.value = [];
       level1.value = Tool.array2Tree(categorys,0);
       console.log("树形结构：",level1.value);
-
-      axios.get("/ebook/list",{
-        params:{
-          page:1,
-          size:10
-        }
-      }).then((response)=>{
-        const data = response.data;
-        ebooks.value = data.content.list;
-        ebooks.value.total = data.content.total;
-      });
+      handleQueryEbook();
     }else {
       message.error(data.message);
     }
@@ -115,11 +122,17 @@ const handleQueryCategory = () => {
   });
 };
 
-const handleClick = () =>{
-  console.log("menu click")
+const handleClick = (value:any) =>{
+  // console.log("menu click")
+  if (value.key === 'welcome'){
+    isShowWelcome.value = true;
+  }else {
+    categoryId2 = value.key;
+    isShowWelcome.value = false;
+    handleQueryEbook();
+  }
 };
 
-const isShowWelcome = ref<boolean>(false);
 
 const handleWelcomeOn = ()=> {
   isShowWelcome.value = true;
@@ -128,12 +141,9 @@ const handleWelcomeOff = ()=> {
   isShowWelcome.value = false;
 };
 
-
-
 onMounted(()=>{
-  handleQueryCategory();
   isShowWelcome.value = true;
-
+  handleQueryCategory();
 });
 
 
