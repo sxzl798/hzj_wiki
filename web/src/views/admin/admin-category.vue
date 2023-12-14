@@ -39,7 +39,6 @@
           :row-key="record=>record.id"
           :loading="loading"
           :pagination="false"
-          :scroll="{ x: 1300, y: 1000 }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -94,6 +93,50 @@
 
         </template>
       </a-table>
+<!--      <a-table-->
+<!--          class="components-table-demo-nested"-->
+<!--          :columns="columns"-->
+<!--          :data-source="level1"-->
+<!--          :row-key="record=>record.id"-->
+<!--          :loading="loading"-->
+<!--          :pagination="false"-->
+<!--      >-->
+<!--        <template #bodyCell="{ column }">-->
+<!--          <template v-if="column.key === 'action'">-->
+<!--            <a>Publish</a>-->
+<!--          </template>-->
+<!--        </template>-->
+<!--        <template #expandedRowRender>-->
+<!--          <a-table :columns="columns" :data-source="level1[0].children" :pagination="false">-->
+<!--            <template #bodyCell="{ column }">-->
+<!--              <template v-if="column.key === 'state'">-->
+<!--            <span>-->
+<!--              <a-badge status="success" />-->
+<!--              Finished-->
+<!--            </span>-->
+<!--              </template>-->
+<!--              <template v-else-if="column.key === 'action'">-->
+<!--            <span class="table-action">-->
+<!--              <a>Pause</a>-->
+<!--              <a>Stop</a>-->
+<!--              <a-dropdown>-->
+<!--                <template #overlay>-->
+<!--                  <a-menu>-->
+<!--                    <a-menu-item>Action 1</a-menu-item>-->
+<!--                    <a-menu-item>Action 2</a-menu-item>-->
+<!--                  </a-menu>-->
+<!--                </template>-->
+<!--                <a>-->
+<!--                  More-->
+<!--                  <down-outlined />-->
+<!--                </a>-->
+<!--              </a-dropdown>-->
+<!--            </span>-->
+<!--              </template>-->
+<!--            </template>-->
+<!--          </a-table>-->
+<!--        </template>-->
+<!--      </a-table>-->
 
     </a-layout-content>
   </a-layout>
@@ -171,6 +214,8 @@ const level1 = ref();
     //数据查询
     const handleQueryCategory = () => {
       loading.value = true;
+      level1.value = [];
+      //如果不清空现有数据，编辑保存重新加载数据后，再点编辑
       axios.get("/category/all").then((response) => {
         loading.value = false;
         const data = response.data;
@@ -200,25 +245,20 @@ const level1 = ref();
         title: '名称',
         dataIndex: 'name',
         key: 'name',
-        fixed: 'left',
-        width: 200
       },
       {
         title: '父分类',
         dataIndex: 'parent',
         key: 'parent',
-        width: 150
       },
       {
         title: '顺序',
         dataIndex: 'sort',
         key: 'sort',
-        width: 150
       },
       {
         title: 'Action',
         key: 'action',
-        width: 150
       },
     ];
 
