@@ -226,8 +226,6 @@ const level1 = ref();
           level1.value = [];
           level1.value = Tool.array2Tree(categorys.value,0);
           console.log("树形结构：",level1.value);
-          console.log("level1的长度：",level1.value.length);
-          console.log("孩子：",level1.value[0].length);
 
         }else {
           message.error(data.message);
