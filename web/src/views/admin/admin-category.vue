@@ -39,6 +39,7 @@
           :row-key="record=>record.id"
           :loading="loading"
           :pagination="false"
+          :scroll="{ x: 1300, y: 1000 }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -179,7 +180,10 @@ const level1 = ref();
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys.value,0);
-          console.log("树形结构：",level1);
+          console.log("树形结构：",level1.value);
+          console.log("level1的长度：",level1.value.length);
+          console.log("孩子：",level1.value[0].length);
+
         }else {
           message.error(data.message);
         }
@@ -196,20 +200,25 @@ const level1 = ref();
         title: '名称',
         dataIndex: 'name',
         key: 'name',
+        fixed: 'left',
+        width: 200
       },
       {
         title: '父分类',
         dataIndex: 'parent',
         key: 'parent',
+        width: 150
       },
       {
         title: '顺序',
         dataIndex: 'sort',
         key: 'sort',
+        width: 150
       },
       {
         title: 'Action',
         key: 'action',
+        width: 150
       },
     ];
 

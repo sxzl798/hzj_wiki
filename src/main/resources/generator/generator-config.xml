@@ -113,7 +113,13 @@
             <!--是否使用实际列名,默认为false-->
             <!--<property name="useActualColumnNames" value="false" />-->
 <!--        </table>-->
-        <table schema="" tableName="category" domainObjectName="Category"
+<!--        <table schema="" tableName="category" domainObjectName="Category"-->
+<!--               enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               enableUpdateByExample="true" selectByExampleQueryId="true">-->
+<!--            &lt;!&ndash;是否使用实际列名,默认为false&ndash;&gt;-->
+<!--            &lt;!&ndash;<property name="useActualColumnNames" value="false" />&ndash;&gt;-->
+<!--        </table>-->
+        <table schema="" tableName="doc" domainObjectName="Doc"
                enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                enableUpdateByExample="true" selectByExampleQueryId="true">
             <!--是否使用实际列名,默认为false-->
