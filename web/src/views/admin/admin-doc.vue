@@ -17,7 +17,7 @@
 
           <a-button type="primary"
                     :icon="h(SearchOutlined)"
-                    @click="handleQuery({page:1,size:pagination.pageSize})"
+                    @click="handleQueryDoc()"
           >
             查询
           </a-button>
@@ -33,14 +33,13 @@
       </a-form>
       </p>
 
-
       <a-table
           :columns="columns"
-          :data-source="ebooks"
+          :data-source="level1"
           :row-key="record=>record.id"
-          :pagination="pagination"
           :loading="loading"
-          @change = "handleTableChange"
+          :pagination="false"
+          :scroll="{ x: 1300, y: 1000 }"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -50,13 +49,6 @@
         </span>
           </template>
         </template>
-
-        <template v-slot:category="{ text,record }">
-            <span>
-              {{getCategoryName(record.categoryId)}}/{{getCategoryName(record.category2Id)}}
-            </span>
-        </template>
-
 
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'name'">
@@ -83,11 +75,6 @@
 
           <template v-else-if="column.key === 'action'">
             <a-space size="small">
-              <router-link to="/admin/doc">
-              <a-button type="primary">
-                文档管理
-              </a-button>
-              </router-link>
               <a-button type="primary" @click="edit(record)">
                 编辑
               </a-button>
@@ -111,23 +98,32 @@
     </a-layout-content>
   </a-layout>
 
-  <a-modal v-model:open="open" title="电子书编辑" :confirm-loading="confirmLoading" @ok="handleOk">
-    <a-form :model="ebook" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-item label="封面">
-        <a-input v-model:value="ebook.cover" />
-      </a-form-item>
+  <a-modal v-model:open="open" title="文档编辑" :confirm-loading="confirmLoading" @ok="handleOk">
+    <a-form :model="doc" :label-col="labelCol" :wrapper-col="wrapperCol">
+
       <a-form-item label="名称">
-        <a-input v-model:value="ebook.name" />
+        <a-input v-model:value="doc.name" />
       </a-form-item>
-      <a-form-item label="分类">
-        <a-cascader v-model:value="categoryIds"
-                    :field-names="{label:'name',value:'id',children:'children'}"
-                    :options="level1"
-        />
+      <a-form-item label="父文档">
+        <a-select
+            ref="select"
+            v-model:value="doc.parent"
+        >
+          <a-select-option value="0">无</a-select-option>
+          <a-select-option v-for="c in level1"
+                           :key="c.id"
+                           :value="c.id"
+                           :disabled="doc.id === c.id"
+          >
+            {{c.name}}
+          </a-select-option>
+
+        </a-select>
       </a-form-item>
-      <a-form-item label="描述">
-        <a-textarea v-model:value="ebook.description" type="text"/>
+      <a-form-item label="顺序">
+        <a-input v-model:value="doc.sort" />
       </a-form-item>
+
 <!--      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">-->
 <!--        <a-button type="primary" @click="onSubmit">Create</a-button>-->
 <!--        <a-button style="margin-left: 10px">Cancel</a-button>-->
@@ -145,17 +141,12 @@ import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
 
-    const ebooks = ref();
-    const loading= ref<boolean>(false);
-    const pagination = ref({
-      current: 1,
-      pageSize: 5,
-      total: 0
-    });
+const docs = ref();
+const loading= ref<boolean>(false);
 
-  const open = ref<boolean>(false);
-  const confirmLoading = ref<boolean>(false);
-  const ebook = ref({});
+const open = ref<boolean>(false);
+const confirmLoading = ref<boolean>(false);
+const doc = ref({});
 
 //内联表单
 const param = ref();
@@ -163,33 +154,36 @@ param.value={};
 
 //内联表单
 
-//表单
-/**
- * 数组[100,101]对应：前端开发/Vue
- */
-
-//表单
-
     //table
+/**
+ * 一级文档树，children属性就是二级文档
+ * [{
+ *   id:"",
+ *   name:"",
+ *   children:[{
+ *     id:"",
+ *     name:"",
+ *   }]
+ * }]
+ */
+const level1 = ref();
 
     //数据查询
-    const handleQuery = (params: any) => {
+    const handleQueryDoc = () => {
       loading.value = true;
-      axios.get("/ebook/list", {
-        //将原本的params参数展开，成为get请求参数中的参数
-        params:{
-          page: params.page,
-          size: params.size,
-          name: param.value.name
-        }
-      }).then((response) => {
+      axios.get("/doc/all").then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success){
-          ebooks.value = data.content.list;
-          //重置分页按钮
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
+          docs.value = data.content;
+          console.log("原始数组：",docs.value);
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(docs.value,0);
+          console.log("树形结构：",level1.value);
+          console.log("level1的长度：",level1.value.length);
+          console.log("孩子：",level1.value[0].length);
+
         }else {
           message.error(data.message);
         }
@@ -197,49 +191,34 @@ param.value={};
       });
     };
 
-    //表格点击页码时触发
-    const handleTableChange = (pagination: any) => {
-      console.log("看看自带的分页参数都有哪些：" + pagination);
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
-      });
-    };
+
 
 
     const columns = [
-      {
-        name: '封面',
-        dataIndex: 'cover',
-        key: 'cover',
-      },
+
       {
         title: '名称',
         dataIndex: 'name',
         key: 'name',
+        fixed: 'left',
+        width: 200
       },
       {
-        title: '分类',
-        slots: { customRender: "category" },
+        title: '父文档',
+        dataIndex: 'parent',
+        key: 'parent',
+        width: 150
       },
       {
-        title: '文档数',
-        dataIndex: 'docCount',
-        key: 'docCount',
-      },
-      {
-        title: '阅读数',
-        dataIndex: 'viewCount',
-        key: 'viewCount',
-      },
-      {
-        title: '点赞数',
-        dataIndex: 'voteCount',
-        key: 'voteCount',
+        title: '顺序',
+        dataIndex: 'sort',
+        key: 'sort',
+        width: 150
       },
       {
         title: 'Action',
         key: 'action',
+        width: 150
       },
     ];
 
@@ -248,31 +227,26 @@ param.value={};
 
 
 //modal
-const categoryIds = ref();
 
     //编辑
     const edit = (record :any) => {
       open.value = true;
-      ebook.value = Tool.copy(record);
-      categoryIds.value = [ebook.value.categoryId,ebook.value.category2Id];
+      doc.value = Tool.copy(record);
     };
     //新增
     const add = () => {
       open.value = true;
-      ebook.value = {};
+      doc.value = {};
     };
 
     //删除
     const handleDelete= (id: number) => {
-      axios.delete("/ebook/delete/" + id).then((response)=>{
+      axios.delete("/doc/delete/" + id).then((response)=>{
         const data = response.data;
         if (data.success){
           // router.go(0);
           //重新加载列表
-          handleQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          });
+          handleQueryDoc();
 
         }
       });
@@ -280,18 +254,13 @@ const categoryIds = ref();
 
     const handleOk = () => {
       confirmLoading.value = true;
-      ebook.value.categoryId = categoryIds.value[0];
-      ebook.value.category2Id = categoryIds.value[1];
-      axios.post("/ebook/save",ebook.value).then((response)=>{
+      axios.post("/doc/save",doc.value).then((response)=>{
         confirmLoading.value=false;
         const data = response.data;
         if (data.success){
           open.value = false;
           //重新加载列表
-          handleQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          });
+          handleQueryDoc();
         }else {
           message.error(data.message);
         }
@@ -305,53 +274,16 @@ const categoryIds = ref();
 
 
 
-
 const labelCol = { style: { width: '150px' } };
 const wrapperCol = { span: 14 };
 //form
 
-const level1 = ref();
-let categorys: any;
 
-//数据查询
-const handleQueryCategory = () => {
-  loading.value = true;
-  axios.get("/category/all").then((response) => {
-    loading.value = false;
-    const data = response.data;
-    if (data.success){
-      categorys = data.content;
-      console.log("原始数组：",categorys);
 
-      level1.value = [];
-      level1.value = Tool.array2Tree(categorys,0);
-      console.log("树形结构：",level1.value);
 
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize,
-      });
-    }else {
-      message.error(data.message);
-    }
-
-  });
-};
-
-const getCategoryName = (cid: number) => {
-  let result = "";
-  categorys.forEach((item:any) => {
-    if (item.id === cid){
-      //return item.name; //注意：这里直接return不起作用
-      result = item.name;
-    }
-  });
-  return result;
-};
 
     onMounted(() => {
-      handleQueryCategory();
-
+      handleQueryDoc();
     });
 
 </script>
