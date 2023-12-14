@@ -110,3 +110,11 @@ INSERT INTO `doc` (id, ebook_id, parent, name, sort, view_count, vote_count)
 VALUES (5, 1, 3,'文档2.2', 2, 0, 0);
 INSERT INTO `doc` (id, ebook_id, parent, name, sort, view_count, vote_count)
 VALUES (6, 1, 5,'文档2.2.1', 1, 0, 0);
+
+DROP TABLE IF EXISTS `content`;
+CREATE TABLE `content` (
+    `id` BIGINT NOT NULL COMMENT '文档id',
+    `content` MEDIUMTEXT NOT NULL COMMENT '内容',
+    PRIMARY KEY (`id`)
+)ENGINE = innodb DEFAULT CHARSET = utf8mb4 COMMENT ='文档内容';
+
