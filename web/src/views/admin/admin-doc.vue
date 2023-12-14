@@ -82,8 +82,9 @@
                   title="删除后不可恢复，是否删除？"
                   ok-text="是"
                   cancel-text="否"
-                  @confirm="handleDelete(record.id)"
+                  @confirm="showConfirm(record.id)"
               >
+<!--              "handleDelete(record.id)"-->
                 <a-button danger>
                   删除
                 </a-button>
@@ -159,6 +160,9 @@ import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { createVNode } from 'vue';
+import { Modal } from 'ant-design-vue';
 
 const docs = ref();
 const loading= ref<boolean>(false);
@@ -284,7 +288,10 @@ const setDisable = (treeSelectData: any,id: any) => {
  * 查找整根树枝
  */
 
-const ids: Array<string> = [];
+let ids: Array<string> = [];
+
+let names: Array<string> = [];
+
 //声明为const是因为这里是数组类型，为引用类型，所以这个ids是不会变化的，所以用常量即可
 const getDeleteIds = (treeSelectData: any,id: any) => {
   // console.log(treeSelectData,id)
@@ -296,6 +303,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       console.log("disabled",node);
       //将目标id放入结果集ids中
       ids.push(id);
+      names.push(node.name);
       //遍历所有子节点，将所有子节点全部都加上disabled
       const children = node.children;
       if (Tool.isNotEmpty(children)){
@@ -354,6 +362,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       });
     };
 
+
     const handleOk = () => {
       confirmLoading.value = true;
       axios.post("/doc/save",doc.value).then((response)=>{
@@ -379,6 +388,26 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
 const labelCol = { style: { width: '150px' } };
 const wrapperCol = { span: 14 };
 //form
+
+const showConfirm = (id:number) => {
+  ids = [];
+  names = [];
+  getDeleteIds(level1.value,id);
+  Modal.confirm({
+    title: '确定删除下列文档吗？',
+    icon: createVNode(ExclamationCircleOutlined),
+    content: createVNode('div', { style: 'color:red;' }, names.join(", ")),
+    onOk() {
+      console.log('OK');
+      handleDelete(id);
+    },
+    onCancel() {
+      console.log('Cancel');
+    },
+    class: 'test',
+
+  });
+};
 
 
 
