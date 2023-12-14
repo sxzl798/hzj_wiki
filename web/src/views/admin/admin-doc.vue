@@ -158,6 +158,7 @@ import { UserOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 const docs = ref();
 const loading= ref<boolean>(false);
@@ -165,6 +166,8 @@ const loading= ref<boolean>(false);
 const open = ref<boolean>(false);
 const confirmLoading = ref<boolean>(false);
 const doc = ref({});
+
+const route = useRoute()
 
 //内联表单
 const param = ref();
@@ -296,7 +299,9 @@ const setDisable = (treeSelectData: any,id: any) => {
     //新增
     const add = () => {
       open.value = true;
-      doc.value = {};
+      doc.value = {
+        ebookId: route.query.ebookId
+      };
 
       //不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
