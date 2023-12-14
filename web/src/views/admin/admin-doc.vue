@@ -105,22 +105,6 @@
       <a-form-item label="名称">
         <a-input v-model:value="doc.name" />
       </a-form-item>
-      <a-form-item label="父文档">
-        <a-select
-            ref="select"
-            v-model:value="doc.parent"
-        >
-          <a-select-option value="0">无</a-select-option>
-          <a-select-option v-for="c in level1"
-                           :key="c.id"
-                           :value="c.id"
-                           :disabled="doc.id === c.id"
-          >
-            {{c.name}}
-          </a-select-option>
-
-        </a-select>
-      </a-form-item>
 
       <a-form-item label="父文档">
         <a-tree-select
@@ -143,6 +127,24 @@
         <a-input v-model:value="doc.sort" />
       </a-form-item>
 
+      <a-form-item label="内容">
+        <div style="border: 1px solid #ccc">
+          <Toolbar
+              style="border-bottom: 1px solid #ccc"
+              :editor="editorRef"
+              :defaultConfig="toolbarConfig"
+
+          />
+          <Editor
+              style="height: 500px; overflow-y: hidden;"
+              v-model="valueHtml"
+              :defaultConfig="editorConfig"
+
+              @onCreated="handleCreated"
+          />
+        </div>
+      </a-form-item>
+
 <!--      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">-->
 <!--        <a-button type="primary" @click="onSubmit">Create</a-button>-->
 <!--        <a-button style="margin-left: 10px">Cancel</a-button>-->
@@ -163,6 +165,9 @@ import {useRoute} from "vue-router";
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { createVNode } from 'vue';
 import { Modal } from 'ant-design-vue';
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { onBeforeUnmount, shallowRef } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
 const docs = ref();
 const loading= ref<boolean>(false);
@@ -293,6 +298,7 @@ let ids: Array<string> = [];
 let names: Array<string> = [];
 
 //声明为const是因为这里是数组类型，为引用类型，所以这个ids是不会变化的，所以用常量即可
+
 const getDeleteIds = (treeSelectData: any,id: any) => {
   // console.log(treeSelectData,id)
   //遍历数组，即遍历某一层节点
@@ -350,6 +356,8 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
 
     //删除
     const handleDelete= (id: number) => {
+      ids = [];
+      names = [];
       getDeleteIds(level1.value,id);
       axios.delete("/doc/delete/"+ids.join(",")).then((response)=>{
         const data = response.data;
@@ -409,6 +417,32 @@ const showConfirm = (id:number) => {
   });
 };
 
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef()
+
+// 内容 HTML
+const valueHtml = ref('<p>hello</p>')
+
+// 模拟 ajax 异步获取内容
+onMounted(() => {
+  setTimeout(() => {
+    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
+  }, 1500)
+})
+
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleCreated = (editor:any) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
 
 
 
