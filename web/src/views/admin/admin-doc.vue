@@ -5,7 +5,7 @@
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
         <a-collapse v-model:activeKey="activeKey">
-          <a-collapse-panel key="1" header="文档目录管理">
+          <a-collapse-panel key="1"  header="文档目录管理">
             <p>
               <a-form
                   layout="inline" :model="param"
@@ -32,11 +32,13 @@
             </p>
 
             <a-table
+                v-if="lengthOfLevel1>0"
                 :columns="columns"
                 :data-source="level1"
                 :row-key="record=>record.id"
                 :loading="loading"
                 :pagination="false"
+                :defaultExpandAllRows = "true"
 
             >
               <template #headerCell="{ column }">
@@ -209,6 +211,7 @@ param.value={};
  * }]
  */
 const level1 = ref();
+const lengthOfLevel1 = ref();
 
 //因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
 const treeSelectData = ref();
@@ -228,6 +231,7 @@ treeSelectData.value = [];
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value,0);
           console.log("树形结构：",level1.value);
+          lengthOfLevel1.value=level1.value.length;
 
         }else {
           message.error(data.message);
@@ -246,16 +250,16 @@ treeSelectData.value = [];
         dataIndex: 'name',
         key: 'name',
       },
-      // {
-      //   title: '父文档',
-      //   dataIndex: 'parent',
-      //   key: 'parent',
-      // },
-      // {
-      //   title: '顺序',
-      //   dataIndex: 'sort',
-      //   key: 'sort',
-      // },
+      {
+        title: '父文档',
+        dataIndex: 'parent',
+        key: 'parent',
+      },
+      {
+        title: '顺序',
+        dataIndex: 'sort',
+        key: 'sort',
+      },
       {
         title: 'Action',
         key: 'action',

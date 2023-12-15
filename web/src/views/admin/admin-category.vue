@@ -34,11 +34,13 @@
       </p>
 
       <a-table
+          v-if="lengthOfLevel1>0"
           :columns="columns"
           :data-source="level1"
           :row-key="record=>record.id"
           :loading="loading"
           :pagination="false"
+          :defaultExpandAllRows = "true"
       >
         <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
@@ -74,7 +76,7 @@
 
           <template v-else-if="column.key === 'action'">
             <a-space size="small">
-              <a-button type="primary" @click="edit(record)">
+              <a-button  @click="edit(record)">
                 编辑
               </a-button>
               <a-popconfirm
@@ -210,6 +212,7 @@ param.value={};
  * }]
  */
 const level1 = ref();
+const lengthOfLevel1 = ref();
 
     //数据查询
     const handleQueryCategory = () => {
@@ -226,6 +229,8 @@ const level1 = ref();
           level1.value = [];
           level1.value = Tool.array2Tree(categorys.value,0);
           console.log("树形结构：",level1.value);
+
+          lengthOfLevel1.value = level1.value.length;
 
         }else {
           message.error(data.message);
