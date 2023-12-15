@@ -96,7 +96,8 @@
               </template>
             </a-table>
           </a-collapse-panel>
-          <a-collapse-panel key="2" header="文档编辑">
+          <a-collapse-panel v-show="showForm"
+                            key="2" header="文档编辑">
             <a-form :model="doc" :label-col="labelCol" :wrapper-col="wrapperCol">
 
               <a-form-item label="名称">
@@ -176,17 +177,21 @@ import { Modal } from 'ant-design-vue';
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import {createEditor} from "@wangeditor/editor";
 
 const docs = ref();
 const loading= ref<boolean>(false);
 
 const open = ref<boolean>(false);
 const confirmLoading = ref<boolean>(false);
-const doc = ref({});
+const doc = ref();
+doc.value={};
 
 const route = useRoute();
 
 const activeKey = ref(1);
+
+const showForm = ref<boolean>(false);
 
 // const showModal= () => {
 //   open.value = true;
@@ -338,6 +343,37 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
   }
 }
 
+//Editor
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef();
+// 内容 HTML
+const valueHtml = ref();
+
+// 模拟 ajax 异步获取内容
+// onMounted(() => {
+//   setTimeout(() => {
+//     valueHtml.value;
+//   }, 1500)
+// })
+
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleCreated = (editor:any) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
+
+
+
+//Editor
+
 
 //modal
 
@@ -352,6 +388,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
 
+      showForm.value=true;
       activeKey.value=2;
     };
     //新增
@@ -365,6 +402,8 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       treeSelectData.value = Tool.copy(level1.value);
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
+
+      showForm.value=true;
       activeKey.value=2;
     };
 
@@ -387,6 +426,11 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
 
     const handleOk = () => {
       confirmLoading.value = true;
+
+      const editor = editorRef.value;
+
+      doc.value.content = editor.getHtml();
+
       axios.post("/doc/save",doc.value).then((response)=>{
         confirmLoading.value=false;
         const data = response.data;
@@ -394,6 +438,8 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
           open.value = false;
           //重新加载列表
           handleQueryDoc();
+
+          showForm.value=false;
           activeKey.value=1;
         }else {
           message.error(data.message);
@@ -432,35 +478,12 @@ const showConfirm = (id:number) => {
   });
 };
 
-// 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef()
-
-// 内容 HTML
-const valueHtml = ref('<p>hello</p>')
-
-// 模拟 ajax 异步获取内容
-onMounted(() => {
-  setTimeout(() => {
-    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-  }, 1500)
-})
-
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
-
-// 组件销毁时，也及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value
-  if (editor == null) return
-  editor.destroy()
-})
-
-const handleCreated = (editor:any) => {
-  editorRef.value = editor // 记录 editor 实例，重要！
-}
-
 const handleCancel = () => {
+  doc.value={};
+
+  showForm.value=false;
   activeKey.value=1;
+
 }
 
 
