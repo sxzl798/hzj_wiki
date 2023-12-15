@@ -4,15 +4,16 @@
           style="margin: 0 16px"
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
-        <a-row>
-          <a-col :span="8">
+        <a-collapse v-model:activeKey="activeKey">
+          <a-collapse-panel key="1" header="文档目录管理">
             <p>
               <a-form
                   layout="inline" :model="param"
+
               >
                 <a-form-item>
 
-                  <a-button type="primary"
+                  <a-button
                             :icon="h(SearchOutlined)"
                             @click="handleQueryDoc()"
                   >
@@ -21,7 +22,7 @@
 
                 </a-form-item>
                 <a-form-item>
-                  <a-button type="primary" @click="add()">
+                  <a-button @click="add()">
                     新增
                   </a-button>
                 </a-form-item>
@@ -36,6 +37,7 @@
                 :row-key="record=>record.id"
                 :loading="loading"
                 :pagination="false"
+
             >
               <template #headerCell="{ column }">
                 <template v-if="column.key === 'name'">
@@ -91,13 +93,12 @@
 
               </template>
             </a-table>
-          </a-col>
-          <a-col :span="16">
-
+          </a-collapse-panel>
+          <a-collapse-panel key="2" header="文档编辑">
             <a-form :model="doc" :label-col="labelCol" :wrapper-col="wrapperCol">
 
               <a-form-item label="名称">
-                <a-input v-model:value="doc.name" />
+                <a-input placeholder="名称" v-model:value="doc.name" />
               </a-form-item>
 
               <a-form-item label="父文档">
@@ -118,44 +119,43 @@
 
               </a-form-item>
               <a-form-item label="顺序">
-                <a-input v-model:value="doc.sort" />
+                <a-input  placeholder="顺序" v-model:value="doc.sort" />
               </a-form-item>
 
-              <a-form-item label="内容">
-                <div style="border: 1px solid #ccc">
-                  <Toolbar
-                      style="border-bottom: 1px solid #ccc"
-                      :editor="editorRef"
-                      :defaultConfig="toolbarConfig"
 
-                  />
-                  <Editor
-                      style="height: 500px; overflow-y: hidden;"
-                      v-model="valueHtml"
-                      :defaultConfig="editorConfig"
+                  <a-form-item label="文档">
+                    <div style="border: 1px solid #ccc">
+                      <Toolbar
+                          style="border-bottom: 1px solid #ccc"
+                          :editor="editorRef"
+                          :defaultConfig="toolbarConfig"
 
-                      @onCreated="handleCreated"
-                  />
-                </div>
-              </a-form-item>
+                      />
+                      <Editor
+                          style="height: 500px; overflow-y: hidden;"
+                          v-model="valueHtml"
+                          :defaultConfig="editorConfig"
 
-              <!--      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">-->
-              <!--        <a-button type="primary" @click="onSubmit">Create</a-button>-->
-              <!--        <a-button style="margin-left: 10px">Cancel</a-button>-->
-              <!--      </a-form-item>-->
+                          @onCreated="handleCreated"
+                      />
+                    </div>
+                  </a-form-item>
+
+                            <a-form-item :wrapper-col="{ span: 18, offset: 14 }">
+                              <a-button type="primary" :confirm-loading="confirmLoading" @click="handleOk">确认</a-button>
+                              <a-button style="margin-left: 10px" @click="handleCancel">取消</a-button>
+                            </a-form-item>
+
             </a-form>
-          </a-col>
-        </a-row>
-
-
+          </a-collapse-panel>
+        </a-collapse>
 
       </a-layout-content>
     </a-layout>
 
-
-
-<!--  <a-modal v-model:open="open" title="文档编辑" :confirm-loading="confirmLoading" @ok="handleOk">-->
-<!--    -->
+<!--  <a-modal v-model:open="open" title="目录编辑"-->
+<!--           :confirm-loading="confirmLoading"-->
+<!--           @ok="handleOk">-->
 <!--  </a-modal>-->
 
 </template>
@@ -184,8 +184,11 @@ const doc = ref({});
 
 const route = useRoute();
 
-const collapsed = ref<boolean>(false);
-const selectedKeys = ref<string[]>(['1']);
+const activeKey = ref(1);
+
+// const showModal= () => {
+//   open.value = true;
+// };
 
 //内联表单
 const param = ref();
@@ -344,6 +347,8 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       setDisable(treeSelectData.value,record.id);
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
+
+      activeKey.value=2;
     };
     //新增
     const add = () => {
@@ -356,6 +361,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       treeSelectData.value = Tool.copy(level1.value);
       //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
+      activeKey.value=2;
     };
 
     //删除
@@ -384,6 +390,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
           open.value = false;
           //重新加载列表
           handleQueryDoc();
+          activeKey.value=1;
         }else {
           message.error(data.message);
         }
@@ -448,12 +455,17 @@ const handleCreated = (editor:any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
 
+const handleCancel = () => {
+  activeKey.value=1;
+}
 
 
 
-    onMounted(() => {
-      handleQueryDoc();
-    });
+
+
+onMounted(() => {
+  handleQueryDoc();
+});
 
 </script>
 <style scoped>
