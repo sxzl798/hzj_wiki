@@ -5,7 +5,8 @@
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
         <a-collapse v-model:activeKey="activeKey">
-          <a-collapse-panel key="1"  header="文档目录管理">
+          <a-collapse-panel key="1"
+              header="文档目录管理">
             <p>
               <a-form
                   layout="inline" :model="param"
@@ -218,6 +219,35 @@ param.value={};
 const level1 = ref();
 const lengthOfLevel1 = ref();
 
+//Editor
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef();
+// 内容 HTML
+const valueHtml = ref();
+
+// 模拟 ajax 异步获取内容
+// onMounted(() => {
+//   setTimeout(() => {
+//     valueHtml.value;
+//   }, 1500)
+// })
+
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
+
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+
+const handleCreated = (editor:any) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
+}
+
+//Editor
+
 //因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
 const treeSelectData = ref();
 treeSelectData.value = [];
@@ -238,6 +268,20 @@ treeSelectData.value = [];
           console.log("树形结构：",level1.value);
           lengthOfLevel1.value=level1.value.length;
 
+        }else {
+          message.error(data.message);
+        }
+
+      });
+    };
+
+    //内容查询
+    const handleQueryContent = () => {
+      axios.get("/doc/find-content/"+doc.value.id).then((response) => {
+        const data = response.data;
+        if (data.success){
+          const editor = editorRef.value;
+          editor.setHtml(data.content);
         }else {
           message.error(data.message);
         }
@@ -343,37 +387,6 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
   }
 }
 
-//Editor
-// 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef();
-// 内容 HTML
-const valueHtml = ref();
-
-// 模拟 ajax 异步获取内容
-// onMounted(() => {
-//   setTimeout(() => {
-//     valueHtml.value;
-//   }, 1500)
-// })
-
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
-
-// 组件销毁时，也及时销毁编辑器
-onBeforeUnmount(() => {
-  const editor = editorRef.value
-  if (editor == null) return
-  editor.destroy()
-})
-
-const handleCreated = (editor:any) => {
-  editorRef.value = editor // 记录 editor 实例，重要！
-}
-
-
-
-//Editor
-
 
 //modal
 
@@ -381,6 +394,8 @@ const handleCreated = (editor:any) => {
     const edit = (record :any) => {
       open.value = true;
       doc.value = Tool.copy(record);
+
+      handleQueryContent();
 
       //不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
@@ -485,8 +500,6 @@ const handleCancel = () => {
   activeKey.value=1;
 
 }
-
-
 
 
 
