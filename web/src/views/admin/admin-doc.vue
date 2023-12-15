@@ -183,7 +183,7 @@ import {createEditor} from "@wangeditor/editor";
 const docs = ref();
 const loading= ref<boolean>(false);
 
-const open = ref<boolean>(false);
+// const open = ref<boolean>(false);
 const confirmLoading = ref<boolean>(false);
 const doc = ref();
 doc.value={};
@@ -224,7 +224,6 @@ const lengthOfLevel1 = ref();
 const editorRef = shallowRef();
 // 内容 HTML
 const valueHtml = ref();
-
 // 模拟 ajax 异步获取内容
 // onMounted(() => {
 //   setTimeout(() => {
@@ -239,8 +238,8 @@ const editorConfig = { placeholder: '请输入内容...' }
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return
-  editor.destroy()
-})
+  editor.destroy();
+});
 
 const handleCreated = (editor:any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
@@ -392,7 +391,9 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
 
     //编辑
     const edit = (record :any) => {
-      open.value = true;
+      // open.value = true;
+      //清空富文本框
+
       doc.value = Tool.copy(record);
 
       handleQueryContent();
@@ -408,7 +409,7 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
     };
     //新增
     const add = () => {
-      open.value = true;
+      // open.value = true;
       doc.value = {
         ebookId: route.query.ebookId
       };
@@ -450,8 +451,9 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
         confirmLoading.value=false;
         const data = response.data;
         if (data.success){
-          open.value = false;
+          // open.value = false;
           //重新加载列表
+          message.success("保存成功");
           handleQueryDoc();
 
           showForm.value=false;
