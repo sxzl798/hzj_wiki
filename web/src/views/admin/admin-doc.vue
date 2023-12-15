@@ -255,7 +255,7 @@ treeSelectData.value = [];
     const handleQueryDoc = () => {
       loading.value = true;
       level1.value=[];
-      axios.get("/doc/all").then((response) => {
+      axios.get("/doc/all/"+route.query.ebookId).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success){

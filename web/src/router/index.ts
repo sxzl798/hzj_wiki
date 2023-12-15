@@ -4,12 +4,19 @@ import AboutView from "@/views/aboutView.vue";
 import AdminEbook from "@/views/admin/admin-ebook.vue";
 import AdminCategory from "@/views/admin/admin-category.vue";
 import AdminDoc from "@/views/admin/admin-doc.vue";
+import Doc from "@/views/docView.vue";
+import DocView from "@/views/docView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/doc',
+    name: 'Doc',
+    component: DocView
   },
   {
     path: '/about',
@@ -35,6 +42,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'AdminDoc',
     component: AdminDoc
   },
+
 ]
 
 const router = createRouter({
