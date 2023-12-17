@@ -125,7 +125,14 @@
 <!--            &lt;!&ndash;是否使用实际列名,默认为false&ndash;&gt;-->
 <!--            &lt;!&ndash;<property name="useActualColumnNames" value="false" />&ndash;&gt;-->
 <!--        </table>-->
-        <table schema="" tableName="content" domainObjectName="Content"
+<!--        <table schema="" tableName="content" domainObjectName="Content"-->
+<!--               enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               enableUpdateByExample="true" selectByExampleQueryId="true">-->
+<!--            &lt;!&ndash;是否使用实际列名,默认为false&ndash;&gt;-->
+<!--            &lt;!&ndash;<property name="useActualColumnNames" value="false" />&ndash;&gt;-->
+<!--        </table>-->
+
+        <table schema="" tableName="user" domainObjectName="User"
                enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                enableUpdateByExample="true" selectByExampleQueryId="true">
             <!--是否使用实际列名,默认为false-->
