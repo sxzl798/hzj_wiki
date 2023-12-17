@@ -126,6 +126,16 @@
                 <a-input  placeholder="顺序" v-model:value="doc.sort" />
               </a-form-item>
 
+              <a-form-item label="操作">
+                <a-button type="primary" @click="handlePreviewContent()">
+                  <EyeOutlined/> 内容预览
+                </a-button>
+                <a-button style="margin-left: 10px" type="default" :confirm-loading="confirmLoading" @click="handleOk">提交</a-button>
+                <a-button style="margin-left: 10px" @click="handleCancel">取消</a-button>
+              </a-form-item>
+<!--              <a-form-item :wrapper-col="{ span: 18, offset: 14 }">-->
+<!--               -->
+<!--              </a-form-item>-->
 
                   <a-form-item label="文档">
                     <div style="border: 1px solid #ccc">
@@ -145,14 +155,25 @@
                     </div>
                   </a-form-item>
 
-                            <a-form-item :wrapper-col="{ span: 18, offset: 14 }">
-                              <a-button type="primary" :confirm-loading="confirmLoading" @click="handleOk">确认</a-button>
-                              <a-button style="margin-left: 10px" @click="handleCancel">取消</a-button>
-                            </a-form-item>
-
             </a-form>
           </a-collapse-panel>
         </a-collapse>
+
+        <a-drawer width="900"
+                  placement="right"
+                  :closable="false"
+                  v-model:open="drawerVisible"
+                  class="custom-class"
+
+        >
+
+          <div class="editor-content-view"
+               :innerHTML="previewHtml"
+          >
+
+          </div>
+
+        </a-drawer>
 
       </a-layout-content>
     </a-layout>
@@ -167,7 +188,6 @@
 import {onMounted ,ref} from 'vue';
 import axios from "axios";
 import {message} from "ant-design-vue";
-import { UserOutlined } from '@ant-design/icons-vue';
 import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
@@ -178,7 +198,6 @@ import { Modal } from 'ant-design-vue';
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import {createEditor} from "@wangeditor/editor";
 
 const docs = ref();
 const loading= ref<boolean>(false);
@@ -246,6 +265,7 @@ const handleCreated = (editor:any) => {
 }
 
 //Editor
+
 
 //因为树选择组件的属性状态，会随当前编辑的节点而变化，所以单独声明一个响应式变量
 const treeSelectData = ref();
@@ -503,6 +523,18 @@ const handleCancel = () => {
 
 }
 
+/**
+ * 富文本预览
+ */
+
+const  drawerVisible = ref(false);
+const previewHtml =ref();
+const handlePreviewContent = () =>{
+  const editor = editorRef.value;
+  const html = editor.getHtml();
+  previewHtml.value = html;
+  drawerVisible.value = true;
+};
 
 
 onMounted(() => {
@@ -515,5 +547,66 @@ img{
   height: 50px;
   width: 50px;
 }
+
+ .editor-content-view {
+   border: 3px solid #ccc;
+   border-radius: 5px;
+   padding: 0 10px;
+   margin-top: 20px;
+   overflow-x: auto;
+ }
+
+.editor-content-view p,
+.editor-content-view li {
+  white-space: pre-wrap;/* 保留空格 */
+}
+
+.editor-content-view blockquote {
+  border-left: 8px solid #d0e5f2;
+  padding: 10px 10px;
+  margin: 10px 0;
+  background-color: #f1f1f1;
+}
+
+.editor-content-view code {
+  font-family: monospace;
+  background-color: #eee;
+  padding: 3px;
+  border-radius: 3px;
+}
+.editor-content-view pre>code {
+  display: block;
+  padding: 10px;
+}
+
+.editor-content-view table {
+  border-collapse: collapse;
+}
+.editor-content-view td,
+.editor-content-view th {
+  border: 1px solid #ccc;
+  min-width: 50px;
+  height: 20px;
+}
+.editor-content-view th {
+  background-color: #f1f1f1;
+}
+
+.editor-content-view ul,
+.editor-content-view ol {
+  padding-left: 20px;
+}
+
+.editor-content-view input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.editor-content-view blockquote p{
+  font-family: "Ubuntu Mono" !important;
+  margin: 20px 10px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+}
+
 
 </style>

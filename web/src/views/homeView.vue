@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import { onMounted ,ref} from 'vue';
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
-import axios, {valueOf} from "axios";
+import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 

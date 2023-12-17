@@ -52,6 +52,7 @@
         </template>
 
         <template v-slot:category="{ text,record }">
+<!--          v-slot:bodyCell="{text, record, index, column}"-->
             <span>
               {{getCategoryName(record.categoryId)}}/{{getCategoryName(record.category2Id)}}
             </span>
@@ -220,8 +221,9 @@ param.value={};
       },
       {
         title: '分类',
-        slots: { customRender: "category" },
+        slots: { customRender: "category" }
       },
+      // slots: { customRender: "category" },v-slot:bodyCell="{text, record, index, column}"
       {
         title: '文档数',
         dataIndex: 'docCount',
