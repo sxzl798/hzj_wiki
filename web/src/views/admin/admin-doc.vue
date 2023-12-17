@@ -111,7 +111,6 @@
                     show-search
                     style="width: 100%"
                     :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                    placeholder="请选择父文档"
                     allow-clear
                     tree-default-expand-all
                     :tree-data="treeSelectData"
@@ -414,14 +413,19 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
       // open.value = true;
       //清空富文本框
 
+
       doc.value = Tool.copy(record);
 
       handleQueryContent();
 
+      treeSelectData.value = [];
       //不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value,record.id);
       //为选择树添加一个“无”
+      if (Tool.isEmpty(treeSelectData.value)){
+        treeSelectData.value=[];
+      }
       treeSelectData.value.unshift({id:0,name:'无'});
 
       showForm.value=true;
@@ -429,15 +433,22 @@ const getDeleteIds = (treeSelectData: any,id: any) => {
     };
     //新增
     const add = () => {
+
       // open.value = true;
       doc.value = {
         ebookId: route.query.ebookId
       };
 
-      //不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
+        //不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
       treeSelectData.value = Tool.copy(level1.value);
-      //为选择树添加一个“无”
+      console.log("treeSelectData.value:",treeSelectData.value)
+      if (Tool.isEmpty(treeSelectData.value)){
+        treeSelectData.value=[];
+        console.log("treeSelectData.value:",treeSelectData.value)
+      }
+        //为选择树添加一个“无”
       treeSelectData.value.unshift({id:0,name:'无'});
+
 
       showForm.value=true;
       activeKey.value=2;
