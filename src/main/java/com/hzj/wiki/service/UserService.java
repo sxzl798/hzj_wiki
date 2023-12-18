@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hzj.wiki.domain.User;
 import com.hzj.wiki.domain.UserExample;
+import com.hzj.wiki.exception.BusinessException;
+import com.hzj.wiki.exception.BusinessExceptionCode;
 import com.hzj.wiki.mapper.UserMapper;
 import com.hzj.wiki.req.UserQueryReq;
 import com.hzj.wiki.req.UserSaveReq;
@@ -15,6 +17,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -57,9 +60,15 @@ public class UserService {
         User user = CopyUtil.copy(saveReq,User.class);
         if (ObjectUtils.isEmpty(saveReq.getId())){
             //新增
+            User userDB = selectByLoginName(saveReq.getLoginName());
+            if (ObjectUtils.isEmpty(userDB)){
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            }else {
+                //用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXITS);
+            }
 
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
         }else{
             userMapper.updateByPrimaryKey(user);
         }
@@ -67,5 +76,17 @@ public class UserService {
 
     public void delete(Long id){
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String LoginName){
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(LoginName);
+        List<User> userList = userMapper.selectByExample(userExample);
+        if (CollectionUtils.isEmpty(userList)){
+            return null;
+        }else {
+            return userList.get(0);
+        }
     }
 }
