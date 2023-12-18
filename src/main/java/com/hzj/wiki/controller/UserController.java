@@ -1,9 +1,11 @@
 package com.hzj.wiki.controller;
 
+import com.hzj.wiki.req.UserLoginReq;
 import com.hzj.wiki.req.UserQueryReq;
 import com.hzj.wiki.req.UserResetPasswordReq;
 import com.hzj.wiki.req.UserSaveReq;
 import com.hzj.wiki.resp.CommonResp;
+import com.hzj.wiki.resp.UserLoginResp;
 import com.hzj.wiki.resp.UserQueryResp;
 import com.hzj.wiki.resp.PageResp;
 import com.hzj.wiki.service.UserService;
@@ -48,6 +50,16 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp commonResp = new CommonResp<>();
         userService.resetPassword(req);
+        return commonResp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp<UserLoginResp> login(@Valid @RequestBody UserLoginReq req)
+    {
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> commonResp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        commonResp.setContent(userLoginResp);
         return commonResp;
     }
 
