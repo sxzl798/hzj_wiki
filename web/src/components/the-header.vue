@@ -26,7 +26,21 @@
       </a-col>
     <a-col :span="1">
       <a>
-        <a-avatar style="color: #f56a00; background-color: #fde3cf" @click="showLoginModal">U</a-avatar>
+        <a-avatar
+            style="color: #f56a00; background-color: #fde3cf"
+            @click="showLoginModal"
+            v-show="!user.id"
+        >
+          U
+        </a-avatar>
+      </a>
+      <a>
+        <a-avatar
+            style="color: #f56a00; background-color: #fde3cf"
+            v-show="!!user.id"
+        >
+          {{user.name}}
+        </a-avatar>
       </a>
     </a-col>
     </a-row>
@@ -65,6 +79,8 @@ const showLoginModal = () =>{
 
 declare let md5: any;
 const key = "!@#QWERT";
+const user = ref();
+user.value = {};
 const loginHandleOk = () => {
   loginConfirmLoading.value = true;
   loginUser.value.password = md5(loginUser.value.password+key);
@@ -74,11 +90,14 @@ const loginHandleOk = () => {
     if (data.success){
       loginOpen.value = false;
       message.success("登录成功");
+      user.value = data.content;
     }else {
       message.error(data.message);
     }
   });
 };
+
+
 
 
 </script>
