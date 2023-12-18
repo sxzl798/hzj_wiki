@@ -70,7 +70,10 @@ public class UserService {
             }
 
         }else{
-            userMapper.updateByPrimaryKey(user);
+            //更新，加上Selective，表示user有值才更新，无值不更新
+            user.setLoginName(null);
+            //在这之前把LoginName设为null，这样即使传进来的LoginName有值，也不更新，防止前端限制被突破
+            userMapper.updateByPrimaryKeySelective(user);
         }
     }
 
