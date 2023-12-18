@@ -109,8 +109,8 @@
       <a-form-item label="用户名">
         <a-input v-model:value="user.loginName" :disabled="!!user.id"/>
       </a-form-item>
-      <a-form-item label="密码">
-        <a-input-password v-model:value="user.password" type="password"/>
+      <a-form-item label="密码" v-show="!user.id">
+        <a-input-password v-model:value="user.password" type="password" />
       </a-form-item>
       <!--      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">-->
       <!--        <a-button type="primary" @click="onSubmit">Create</a-button>-->
