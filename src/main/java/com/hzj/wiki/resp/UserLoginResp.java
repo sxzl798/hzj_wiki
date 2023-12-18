@@ -6,6 +6,25 @@ public class UserLoginResp implements Serializable {
     private Long id;
     private String loginName;
     private String name;
+    private String token;
+
+    @Override
+    public String toString() {
+        return "UserLoginResp{" +
+                "id=" + id +
+                ", loginName='" + loginName + '\'' +
+                ", name='" + name + '\'' +
+                ", token='" + token + '\'' +
+                '}';
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -15,15 +34,6 @@ public class UserLoginResp implements Serializable {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
-    }
-
-    @Override
-    public String toString() {
-        return "UserLoginResp{" +
-                "id=" + id +
-                ", loginName='" + loginName + '\'' +
-                ", name='" + name + '\'' +
-                '}';
     }
 
     public Long getId() {
