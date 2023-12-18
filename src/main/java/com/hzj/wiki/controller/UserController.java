@@ -8,6 +8,7 @@ import com.hzj.wiki.resp.PageResp;
 import com.hzj.wiki.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +28,7 @@ public class UserController {
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq saveReqreq)
     {
+        saveReqreq.setPassword(DigestUtils.md5DigestAsHex(saveReqreq.getPassword().getBytes()));
         CommonResp commonResp = new CommonResp<>();
         userService.save(saveReqreq);
         return commonResp;

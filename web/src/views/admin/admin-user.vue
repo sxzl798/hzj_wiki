@@ -129,6 +129,9 @@ import { h } from 'vue';
 import { SearchOutlined } from '@ant-design/icons-vue';
 import {Tool} from "@/util/tool";
 
+declare let md5: any;
+const key = "!@#QWERT";
+
 const users = ref();
 const loading= ref<boolean>(false);
 const pagination = ref({
@@ -248,6 +251,7 @@ const handleDelete= (id: number) => {
 
 const handleOk = () => {
   confirmLoading.value = true;
+  user.value.password = md5(user.value.password+ key);
   axios.post("/user/save",user.value).then((response)=>{
     confirmLoading.value=false;
     const data = response.data;
