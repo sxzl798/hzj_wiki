@@ -78,6 +78,9 @@
 
           <template v-else-if="column.key === 'action'">
             <a-space size="small">
+              <a-button type="primary" @click="resetPassword(record)">
+                重置密码
+              </a-button>
               <a-button type="primary" @click="edit(record)">
                 编辑
               </a-button>
@@ -119,6 +122,16 @@
     </a-form>
   </a-modal>
 
+  <a-modal v-model:open="resetPasswordopen" title="重置密码" :confirm-loading="resetPasswordconfirmLoading" @ok="resetPasswordhandleOk">
+    <a-form :model="user" :label-col="labelCol" :wrapper-col="wrapperCol">
+
+      <a-form-item label="新密码">
+        <a-input-password v-model:value="user.password" type="password" />
+      </a-form-item>
+
+    </a-form>
+  </a-modal>
+
 </template>
 <script lang="ts" setup>
 import {onMounted ,ref} from 'vue';
@@ -144,20 +157,14 @@ const open = ref<boolean>(false);
 const confirmLoading = ref<boolean>(false);
 const user = ref({});
 
-//内联表单
 const param = ref();
 param.value={};
 
-//内联表单
-
-//表单
 /**
  * 数组[100,101]对应：前端开发/Vue
  */
 
-//表单
-
-    //table
+//一般表单
 
     //数据查询
 const handleQuery = (params: any) => {
@@ -184,15 +191,84 @@ const handleQuery = (params: any) => {
       });
     };
 
-//表格点击页码时触发
-const handleTableChange = (pagination: any) => {
-  console.log("看看自带的分页参数都有哪些：" + pagination);
-  handleQuery({
-    page: pagination.current,
-    size: pagination.pageSize
+const handleOk = () => {
+  confirmLoading.value = true;
+  user.value.password = md5(user.value.password+ key);
+  axios.post("/user/save",user.value).then((response)=>{
+    confirmLoading.value=false;
+    const data = response.data;
+    if (data.success){
+      open.value = false;
+      //重新加载列表
+      handleQuery({
+        page:pagination.value.current,
+        size:pagination.value.pageSize,
+      });
+    }else {
+      message.error(data.message);
+    }
   });
 };
 
+//删除
+const handleDelete= (id: number) => {
+  axios.delete("/user/delete/" + id).then((response)=>{
+    const data = response.data;
+    if (data.success){
+      // router.go(0);
+      //重新加载列表
+      handleQuery({
+        page:pagination.value.current,
+        size:pagination.value.pageSize,
+      });
+
+    }
+  });
+};
+
+//编辑
+const edit = (record :any) => {
+  open.value = true;
+  user.value = Tool.copy(record);
+};
+//新增
+const add = () => {
+  open.value = true;
+  user.value = {};
+};
+
+//重置密码表单
+
+const resetPasswordopen = ref<boolean>(false);
+const resetPasswordconfirmLoading = ref<boolean>(false);
+
+const resetPasswordhandleOk = () => {
+  resetPasswordconfirmLoading.value = true;
+  user.value.password = md5(user.value.password+ key);
+  axios.post("/user/reset-password",user.value).then((response)=>{
+    resetPasswordconfirmLoading.value=false;
+    const data = response.data;
+    if (data.success){
+      resetPasswordopen.value = false;
+      //重新加载列表
+      handleQuery({
+        page:pagination.value.current,
+        size:pagination.value.pageSize,
+      });
+    }else {
+      message.error(data.message);
+    }
+  });
+};
+
+//重置密码按钮
+const resetPassword = (record :any) => {
+  resetPasswordopen.value = true;
+  user.value = Tool.copy(record);
+  user.value.password = null;
+};
+
+//表格点击页码时触发
 
 const columns = [
   {
@@ -216,65 +292,16 @@ const columns = [
   },
 ];
 
+const handleTableChange = (pagination: any) => {
+  console.log("看看自带的分页参数都有哪些：" + pagination);
+  handleQuery({
+    page: pagination.current,
+    size: pagination.pageSize
+  });
+};
+
 
 //table
-
-
-//modal
-
-//编辑
-const edit = (record :any) => {
-  open.value = true;
-  user.value = Tool.copy(record);
-};
-//新增
-const add = () => {
-  open.value = true;
-  user.value = {};
-};
-
-//删除
-const handleDelete= (id: number) => {
-  axios.delete("/user/delete/" + id).then((response)=>{
-    const data = response.data;
-    if (data.success){
-      // router.go(0);
-      //重新加载列表
-      handleQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      });
-
-    }
-  });
-};
-
-const handleOk = () => {
-  confirmLoading.value = true;
-  user.value.password = md5(user.value.password+ key);
-  axios.post("/user/save",user.value).then((response)=>{
-    confirmLoading.value=false;
-    const data = response.data;
-    if (data.success){
-      open.value = false;
-      //重新加载列表
-      handleQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      });
-    }else {
-      message.error(data.message);
-    }
-  });
-};
-
-//modal
-
-//form
-//数据源
-
-
-
 
 const labelCol = { style: { width: '150px' } };
 const wrapperCol = { span: 14 };

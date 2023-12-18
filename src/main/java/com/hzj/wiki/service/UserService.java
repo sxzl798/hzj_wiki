@@ -8,6 +8,7 @@ import com.hzj.wiki.exception.BusinessException;
 import com.hzj.wiki.exception.BusinessExceptionCode;
 import com.hzj.wiki.mapper.UserMapper;
 import com.hzj.wiki.req.UserQueryReq;
+import com.hzj.wiki.req.UserResetPasswordReq;
 import com.hzj.wiki.req.UserSaveReq;
 import com.hzj.wiki.resp.UserQueryResp;
 import com.hzj.wiki.resp.PageResp;
@@ -92,5 +93,13 @@ public class UserService {
         }else {
             return userList.get(0);
         }
+    }
+
+    /*
+   保存
+    */
+    public void resetPassword(UserResetPasswordReq req){
+        User user = CopyUtil.copy(req,User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 }
