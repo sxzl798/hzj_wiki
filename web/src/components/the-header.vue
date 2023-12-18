@@ -50,6 +50,8 @@
 
 <script lang="ts" setup>
 import {ref} from "vue";
+import axios from "axios";
+import {message} from "ant-design-vue";
 
 const loginUser = ref({
   loginName: "test",
@@ -61,9 +63,24 @@ const showLoginModal = () =>{
   loginOpen.value = true;
 }
 
+declare let md5: any;
+const key = "!@#QWERT";
 const loginHandleOk = () => {
-  console.log("开始登录");
+  loginConfirmLoading.value = true;
+  loginUser.value.password = md5(loginUser.value.password+key);
+  axios.post('/user/login',loginUser.value).then((response)=>{
+    loginConfirmLoading.value=false;
+    const data = response.data;
+    if (data.success){
+      loginOpen.value = false;
+      message.success("登录成功");
+    }else {
+      message.error(data.message);
+    }
+  });
 };
+
+
 </script>
 
 <style>
