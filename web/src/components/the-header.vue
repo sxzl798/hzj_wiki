@@ -25,25 +25,24 @@
     </a-menu>
       </a-col>
     <a-col :span="1">
-      <a>
-            <a-avatar style="background-color: #87d068"
-                      :size = 36
-                      v-show="!user.id"
-                      @click="showLoginModal">
-              <template #icon>
-                <UserOutlined />
-              </template>
-            </a-avatar>
-
-      </a>
-      <a>
-        <a-avatar
-            style="color: #f56a00; background-color: #fde3cf"
-            v-show="!!user.id"
-            :size = 36
+      <a v-show="!user.id">
+        <a-avatar style="color: #f56a00; background-color: #fde3cf"
+                  @click="showLoginModal"
         >
-          {{user.name}}
+          U
         </a-avatar>
+      </a>
+      <a v-show="!!user.id" style="text-align: center">
+        <a-popover title="个人信息" placement="bottomRight" >
+          <template #content>
+            <p>用户名：{{ user.loginName }}</p>
+              <a-button type="primary" size="small" @click="handleLogout">
+                退出登录
+              </a-button>
+
+          </template>
+          <a-button type="primary">{{user.name}}</a-button>
+        </a-popover>
       </a>
     </a-col>
     </a-row>
@@ -82,7 +81,6 @@ export default defineComponent({
       loginOpen.value = true;
     }
 
-
     const key = "!@#QWERT";
 
     const thisUser = ref();
@@ -103,7 +101,22 @@ export default defineComponent({
         }
       });
     };
+
     const user = computed(()=> store.state.user);
+
+    //退出登录
+    const handleLogout = () => {
+      console.log("退出登录开始");
+      axios.get('/user/logout/'+user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success){
+          message.success("已退出登录");
+          store.commit("setUser",{});
+        }else {
+          message.error(data.message);
+        }
+      });
+    };
 
     return{
       showLoginModal,
@@ -112,6 +125,7 @@ export default defineComponent({
       loginConfirmLoading,
       loginHandleOk,
       loginUser,
+      handleLogout
     }
   }
 });
