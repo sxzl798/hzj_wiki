@@ -1,7 +1,9 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Design ©2023 Created by Hzzzj，欢迎
-    {{user.name}}
+    <P size="small" v-show="!!user.id">
+      你好，{{user.name}}
+    </P>
+    Design ©2023 Created by Hzzzj
   </a-layout-footer>
 </template>
 
