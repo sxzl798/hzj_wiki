@@ -10,18 +10,18 @@
           <a-menu-item key="/">
             <router-link to="/">首页</router-link>
           </a-menu-item>
-          <a-menu-item key="/admin/user">
-            <router-link to="/admin/user">用户管理</router-link>
-          </a-menu-item>
-          <a-menu-item key="/admin/ebook">
-            <router-link to="/admin/ebook">电子书管理</router-link>
-          </a-menu-item>
-          <a-menu-item key="/admin/category">
-            <router-link to="/admin/category">分类管理</router-link>
-          </a-menu-item>
-          <a-menu-item key="/about">
-            <router-link to="/about">关于我们</router-link>
-          </a-menu-item>
+        <a-menu-item key="/about">
+         <router-link to="/about">关于我们</router-link>
+        </a-menu-item>
+<!--          <a-menu-item key="/admin/user">-->
+<!--            <router-link to="/admin/user">用户管理</router-link>-->
+<!--          </a-menu-item>-->
+<!--          <a-menu-item key="/admin/ebook">-->
+<!--            <router-link to="/admin/ebook">电子书管理</router-link>-->
+<!--          </a-menu-item>-->
+<!--          <a-menu-item key="/admin/category">-->
+<!--            <router-link to="/admin/category">分类管理</router-link>-->
+<!--          </a-menu-item>-->
     </a-menu>
       </a-col>
     <a-col :span="1">
@@ -36,6 +36,9 @@
         <a-popover title="个人信息" placement="bottomRight" >
           <template #content>
             <p>用户名：{{ user.loginName }}</p>
+            <p><router-link to="/admin/user">用户管理</router-link></p>
+            <p><router-link to="/admin/ebook">电子书管理</router-link></p>
+            <p><router-link to="/admin/category">分类管理</router-link></p>
               <a-button type="primary" size="small" @click="handleLogout">
                 退出登录
               </a-button>
