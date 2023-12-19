@@ -1,5 +1,6 @@
 package com.hzj.wiki.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzj.wiki.req.UserLoginReq;
 import com.hzj.wiki.req.UserQueryReq;
 import com.hzj.wiki.req.UserResetPasswordReq;
@@ -75,7 +76,7 @@ public class UserController {
         Long token = snowFlake.nextId();
         LOG.info("生成单点登录token:{}，并放入redis中",token);
         userLoginResp.setToken(token.toString());
-        redisTemplate.opsForValue().set(token, userLoginResp,3600*24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp),3600*24, TimeUnit.SECONDS);
 //        JSONObject.toJSONString(
 
         commonResp.setContent(userLoginResp);
