@@ -75,8 +75,8 @@ export default defineComponent({
   name:'the-header',
   setup(){
     const loginUser = ref({
-      loginName: "test",
-      password: "test"
+      loginName: "",
+      password: ""
     });
     const loginOpen = ref<boolean>(false);
     const loginConfirmLoading = ref<boolean>(false);
