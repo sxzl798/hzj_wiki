@@ -115,6 +115,7 @@ export default defineComponent({
         if (data.success){
           message.success("已退出登录");
           store.commit("setUser",{});
+          location.reload();
         }else {
           message.error(data.message);
         }
