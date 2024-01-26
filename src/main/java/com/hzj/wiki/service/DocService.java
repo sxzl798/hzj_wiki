@@ -7,6 +7,7 @@ import com.hzj.wiki.domain.Doc;
 import com.hzj.wiki.domain.DocExample;
 import com.hzj.wiki.mapper.ContentMapper;
 import com.hzj.wiki.mapper.DocMapper;
+import com.hzj.wiki.mapper.DocMapperCust;
 import com.hzj.wiki.req.DocQueryReq;
 import com.hzj.wiki.req.DocSaveReq;
 import com.hzj.wiki.resp.DocQueryResp;
@@ -26,6 +27,9 @@ public class DocService {
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private DocMapperCust docMapperCust;
     @Resource
     private ContentMapper contentMapper;
 
@@ -75,8 +79,9 @@ public class DocService {
 
         if (ObjectUtils.isEmpty(saveReq.getId())){
             //新增
-
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
             content.setId(doc.getId());
             contentMapper.insert(content);
@@ -102,6 +107,8 @@ public class DocService {
 
     public String findContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
+        docMapperCust.increaseViewCount(id);
+        //文档阅读数+1
         if (ObjectUtils.isEmpty(content)){
             return "";
         }else {
