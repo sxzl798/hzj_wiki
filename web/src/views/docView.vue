@@ -59,10 +59,7 @@ const handleQueryContent = (id:number) => {
       }else {
         message.error(data.message);
       }
-
     });
-
-
 };
 
 const handleQuery = () => {
