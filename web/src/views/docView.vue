@@ -19,6 +19,14 @@
 
         <a-col :span="20">
           <h3 v-if="level1.length===0">无文档</h3>
+          <div>
+            <h2>{{doc.name}}</h2>
+            <div>
+              <span>阅读数：{{doc.viewCount}}</span> &nbsp; &nbsp;
+              <span>点赞数：{{doc.voteCount}}</span>
+            </div>
+            <a-divider style="height: 2px;background-color: #9999cc"/>
+          </div>
           <div class="editor-content-view" :innerHTML="html">
 
           </div>
@@ -37,6 +45,9 @@ import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+
+const doc = ref();
+doc.value = {};
 
 const route = useRoute();
 const docs = ref();
@@ -82,6 +93,7 @@ const handleQuery = () => {
             console.log('level1.value[0]-id:',level1.value[0].id);
             defaultSelectedKeys.value = [level1.value[0].id];
             handleQueryContent(level1.value[0].id);
+            doc.value = level1.value[0];
           }
 
         }
@@ -92,11 +104,14 @@ const handleQuery = () => {
     });
 };
 
-const onSelect = (selectKeys: any) => {
-  console.log('selected',selectKeys.info);
-  if (Tool.isNotEmpty(selectKeys)){
+const onSelect = (selectedKeys: any, info: any) => {
+  console.log('selectedKeys',selectedKeys);
+  console.log('info',info);
+  if (Tool.isNotEmpty(selectedKeys)){
+    //选中某一结点时，加载该节点的文档信息
+    doc.value = info.selectedNodes[0];
     //加载内容
-    handleQueryContent(selectKeys[0]);
+    handleQueryContent(selectedKeys[0]);
   }
 }
 
