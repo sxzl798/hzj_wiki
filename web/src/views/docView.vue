@@ -27,8 +27,13 @@
             </div>
             <a-divider style="height: 2px;background-color: #9999cc"/>
           </div>
-          <div class="editor-content-view" :innerHTML="html">
-
+          <div class="editor-content-view" :innerHTML="html"></div>
+          <div class="vote-div">
+            <a-button type="primary" shape="round" :size="'large'" @click="vote">
+              <template #icon>
+                <LikeOutlined />&nbsp;点赞:{{doc.voteCount}}
+              </template>
+            </a-button>
           </div>
 
         </a-col>
@@ -113,6 +118,18 @@ const onSelect = (selectedKeys: any, info: any) => {
     //加载内容
     handleQueryContent(selectedKeys[0]);
   }
+};
+
+// 点赞
+const vote = () => {
+  axios.get('/doc/vote/'+doc.value.id).then((response)=>{
+    const data = response.data;
+    if (data.success){
+      doc.value.voteCount++;
+    }else {
+      message.error(data.message);
+    }
+  });
 }
 
 onMounted(() => {
