@@ -2,7 +2,9 @@ package com.hzj.wiki.exception;
 
 public enum BusinessExceptionCode {
     USER_LOGIN_NAME_EXITS("用户名已存在"),
-    LOGIN_USER_ERROR("用户名不存在或密码错误"),;
+    LOGIN_USER_ERROR("用户名不存在或密码错误"),
+    VOTE_REPEAT("您已点赞过"),
+    ;
     private String desc;
     BusinessExceptionCode(String desc){this.desc = desc;}
     public String getDesc(){return desc;}
