@@ -132,4 +132,4 @@ CREATE TABLE `user`
 INSERT INTO `user` (id,`login_name`,`name`,`password`)
 VALUES (1,'test','测试','test');
 
-
+SELECT COUNT(1),SUM(view_count),SUM(vote_count) FROM doc GROUP BY ebook_id;
