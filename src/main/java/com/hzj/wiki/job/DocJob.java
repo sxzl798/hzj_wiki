@@ -28,8 +28,11 @@ public class DocJob {
      * 只有等下一次执行完成，下一次才会再下一个时间点执行，错过就错过
      */
 
-    @Scheduled(cron = "30/5 * * * * ? ")
+    @Scheduled(cron = "5/30 * * * * ? ")
     public void cron() {
+        LOG.info("更新电子书下的文档数据开始");
+        long start = System.currentTimeMillis();
         docService.updateEbookInfo();
+        LOG.info("更新电子书下的文档数据结束，耗时：{}毫秒",System.currentTimeMillis() - start);
     }
 }
