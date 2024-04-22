@@ -9,4 +9,6 @@ Accept: application/json
 ###
 GET http://localhost:8080/ebook/list?page=1&size=400
 
+
 ###
+GET http://localhost:8080/category/all
