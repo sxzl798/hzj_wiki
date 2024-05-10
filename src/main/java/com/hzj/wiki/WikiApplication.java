@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("com.hzj.wiki.mapper")
 @SpringBootApplication
 @EnableScheduling
-//@EnableAsync
 public class WikiApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
 	public static void main(String[] args) {
