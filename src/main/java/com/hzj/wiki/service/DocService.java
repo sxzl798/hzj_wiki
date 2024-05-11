@@ -18,7 +18,6 @@ import com.hzj.wiki.util.CopyUtil;
 import com.hzj.wiki.util.RedisUtil;
 import com.hzj.wiki.util.RequestContext;
 import com.hzj.wiki.util.SnowFlake;
-import com.hzj.wiki.websocket.WebSocketServer;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +44,7 @@ public class DocService {
     public RedisUtil redisUtil;
 
     @Resource
-    public WebSocketServer webSocketServer;
+    public WsService wsService;
 
     public PageResp<DocQueryResp> list(DocQueryReq req){
 
@@ -142,10 +141,12 @@ public class DocService {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
 
-        //推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
-        webSocketServer.sendInfo("【"+docDb.getName()+"】收到"+docDb.getVoteCount()+"个赞！");
+
+        //推送消息
+        wsService.sendInfo("【"+docDb.getName()+"】收到第"+docDb.getVoteCount()+"个赞！");
     }
+
     public void updateEbookInfo(){
         docMapperCust.updateEbookInfo();
     }
