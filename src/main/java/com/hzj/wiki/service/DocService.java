@@ -19,7 +19,6 @@ import com.hzj.wiki.util.RedisUtil;
 import com.hzj.wiki.util.RequestContext;
 import com.hzj.wiki.util.SnowFlake;
 import jakarta.annotation.Resource;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -47,9 +46,6 @@ public class DocService {
 
     @Resource
     public WsService wsService;
-
-    @Resource
-    private RocketMQTemplate rocketMQTemplate;
 
     public PageResp<DocQueryResp> list(DocQueryReq req){
 
@@ -141,20 +137,15 @@ public class DocService {
         //远程IP+doc.id作为key，24小时内不能重复
         String ip = RequestContext.getRemoteAddr();
         if (redisUtil.validateRepeat("DOC_VOTE_"+ id +"_" + ip,3600*24)){
-            //3600*24
             docMapperCust.increaseVoteCount(id);
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
 
-        //ASync推送消息
+        //推送消息
         Doc docDb = docMapper.selectByPrimaryKey(id);
         String logId = MDC.get("LOG_ID");
-//        wsService.sendInfo("【"+docDb.getName()+"】收到第"+docDb.getVoteCount()+"个赞！",logId);
-        //消费端一般会写到另一个专门监听MQ的应用，这里只有一个应用，才写到一起
-        //一个业务(逻辑)一个Topic
-        rocketMQTemplate.convertAndSend("VOTE_TOPIC",
-                "【"+docDb.getName()+"】收到第"+docDb.getVoteCount()+"个赞！");
+        wsService.sendInfo("【"+docDb.getName()+"】收到第"+docDb.getVoteCount()+"个赞！",logId);
     }
 
     public void updateEbookInfo(){

@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
-//@Import(RocketMQAutoConfiguration.class)
 public class WikiApplication {
 	private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
 	public static void main(String[] args) {
