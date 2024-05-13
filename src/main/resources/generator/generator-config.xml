@@ -132,11 +132,9 @@
 <!--            &lt;!&ndash;<property name="useActualColumnNames" value="false" />&ndash;&gt;-->
 <!--        </table>-->
 
-        <table schema="" tableName="user" domainObjectName="User"
+        <table schema="" tableName="ebook_snapshot" domainObjectName="EbookSnapshot"
                enableCountByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                enableUpdateByExample="true" selectByExampleQueryId="true">
-            <!--是否使用实际列名,默认为false-->
-            <!--<property name="useActualColumnNames" value="false" />-->
         </table>
     </context>
 </generatorConfiguration>
