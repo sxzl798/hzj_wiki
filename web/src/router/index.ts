@@ -8,12 +8,18 @@ import AdminDoc from "@/views/admin/admin-doc.vue";
 import DocView from "@/views/docView.vue";
 import {Tool} from "@/util/tool";
 import store from "@/store";
+import TheWelcome from "@/components/the-welcome.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/welcome',
+    name:'welcome',
+    component: TheWelcome
   },
   {
     path: '/doc',

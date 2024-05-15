@@ -30,8 +30,12 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <div class="welcome" v-show = "isShowWelcome">
+        <the-welcome />
+      </div>
 
-      <a-list item-layout="vertical" size="large"
+      <a-list v-show="!isShowWelcome"
+          item-layout="vertical" size="large"
               :grid="{ gutter: 16, column: 2 }"
               :data-source="ebooks"
       >
@@ -74,21 +78,21 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted ,ref} from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import {StarOutlined, LikeOutlined, MessageOutlined, FileOutlined, UserOutlined} from '@ant-design/icons-vue';
 import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import TheWelcome from "@/components/the-welcome.vue";
+import TheHeader from "@/components/the-header.vue";
+import TheFooter from "@/components/the-footer.vue";
 
-// const actions: Record<string, any>[] = [
-//   { icon: StarOutlined, text: '156' },
-//   { icon: LikeOutlined, text: '156' },
-//   { icon: MessageOutlined, text: '2' },
-// ];
+
 const ebooks = ref();
 // const ebooks1 = reactive({books:[]});
 
 const level1 = ref();
+const isShowWelcome = ref(true);
 let categorys: any;
 
 let categoryId2 = 0;
