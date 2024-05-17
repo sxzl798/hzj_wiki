@@ -3,11 +3,12 @@
     <a-row>
       <a-col :span="23">
     <a-menu
-        theme="dark"
+        theme="light"
         mode="horizontal"
         :style="{ lineHeight: '64px'}"
+        style="background-color: #f0f2f5;"
     >
-          <a-menu-item key="/">
+          <a-menu-item key="/" @click="refreshPage">
             <router-link to="/">首页</router-link>
           </a-menu-item>
         <a-menu-item key="/about">
@@ -18,11 +19,12 @@
       </a-col>
     <a-col :span="1">
       <a v-show="!user.id">
-        <a-avatar style="color: #f56a00; background-color: #fde3cf"
-                  @click="showLoginModal"
+        <a-avatar style="color: #1890ff; background-color: #e6f7ff"
+        @click="showLoginModal"
         >
-          U
+        User
         </a-avatar>
+
       </a>
       <a v-show="!!user.id" style="text-align: center">
         <a-popover title="个人信息" placement="bottomRight" >
@@ -64,7 +66,14 @@ import {message} from "ant-design-vue";
 import store from "@/store";
 declare let md5: any;
 export default defineComponent({
+
   name:'the-header',
+
+  methods: {
+    refreshPage() {
+      window.location.reload();
+    }
+  },
   setup(){
     const loginUser = ref({
       loginName: "",
@@ -129,6 +138,8 @@ export default defineComponent({
 
 </script>
 
-<style>
-
+<style scoped>
+.header {
+  background-color: #f0f2f5; /* 设置浅色背景色 */
+}
 </style>

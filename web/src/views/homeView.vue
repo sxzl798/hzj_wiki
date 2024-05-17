@@ -6,11 +6,11 @@
           :style="{ height: '100%', borderRight: 0 }"
           @click = "handleClick"
       >
-        <a-menu-item key="welcome" >
-          <router-link to="/">
+        <a-menu-item key="welcome" @click = "handleClickItem_isShowWelcome">
+<!--          <router-link to="/">-->
             <SmileTwoTone />
             <span>欢迎</span>
-          </router-link>
+<!--          </router-link>-->
 
         </a-menu-item>
 
@@ -31,7 +31,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show = "isShowWelcome">
-        <the-welcome />
+        <the-welcome></the-welcome>
       </div>
 
       <a-list v-show="!isShowWelcome"
@@ -171,6 +171,10 @@ const handleClickItem = (value:number) =>{
   console.log(value);
   categoryId=value;
   handleQueryEbookByCategoryId();
+}
+
+const handleClickItem_isShowWelcome = () =>{
+  isShowWelcome.value = false;
 }
 
 

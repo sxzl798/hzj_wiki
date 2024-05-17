@@ -209,3 +209,14 @@ ON t1.ebook_id = t2.ebook_id
 SET t1.view_increase = (t1.view_count - ifnull(t2.view_count,0)),
     t1.vote_increase = (t1.vote_count - ifnull(t2.vote_count,0))
 WHERE t1.`date` = CURDATE();
+
+SELECT
+    t1.`date` as `date`,
+    sum(t1.view_count) as viewCount,
+    sum(t1.vote_count) as voteCount,
+    sum(t1.view_increase) as viewIncrease,
+    sum(t1.vote_increase) as voteIncrease
+FROM ebook_snapshot t1
+WHERE t1.`date` >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+GROUP BY t1.`date`
+ORDER BY t1.`date` ASC;

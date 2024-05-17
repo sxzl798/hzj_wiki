@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer style="text-align: center">
+  <a-layout-footer style="text-align: center"  class="footer">
     <P size="small" v-show="!!user.id">
       你好，{{user.name}}
     </P>
@@ -70,3 +70,13 @@ export default defineComponent({
 });
 
 </script>
+
+
+<style scoped>
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+</style>
