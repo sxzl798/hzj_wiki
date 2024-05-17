@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "echarts": "^5.5.0",
+    "ngx-echarts": "^17.2.0"
+  },
+  "devDependencies": {
+    "@types/echarts": "^4.9.22"
+  }
+}
