@@ -51,4 +51,17 @@
         GROUP BY t1.`date`
         ORDER BY t1.`date` ASC;
     </select>
+
+    <select id="get30Statistic" resultType="com.hzj.wiki.resp.StatisticResp">
+        SELECT
+            t1.`date` as `date`,
+            sum(t1.view_increase) as viewIncrease,
+            sum(t1.vote_increase) as voteIncrease
+        FROM ebook_snapshot t1
+        WHERE t1.`date` BETWEEN date_sub(CURDATE(), INTERVAL 30 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        GROUP BY t1.`date`
+        ORDER BY t1.`date` ASC;
+    </select>
+
+
 </mapper>
