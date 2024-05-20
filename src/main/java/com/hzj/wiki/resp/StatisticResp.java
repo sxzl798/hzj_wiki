@@ -1,10 +1,13 @@
 package com.hzj.wiki.resp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class StatisticResp implements Serializable {
 
+    @JsonFormat(pattern = "MM-dd", timezone = "GMT+8")
     private Date date;
 
     private Integer viewCount;

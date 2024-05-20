@@ -134,35 +134,88 @@ const getStatistic = () => {
   });
 };
 
-// 图表
-const testEcharts = () => {
-// 基于准备好的dom，初始化echarts实例
+const init30DayEcharts = (list: any) => {
+  //基于准备好的dom，初始化echarts实例
   const myChart = echarts.init(document.getElementById('main'));
-// 绘制图表
-  myChart.setOption({
+  const xAxis =[];
+  const seriesView = [];
+  const seriesVote = [];
+  console.log('list:', list);
+  for (let i = 0; i < list.length; i++) {
+    const record = list[i];
+    xAxis.push(record.date);
+    seriesView.push(record.viewIncrease);
+    seriesVote.push(record.voteIncrease);
+  }
+  //指定图表的配置项和数据
+  const option = {
     title: {
-      text: 'ECharts 入门示例'
+      text: '阅览数据'
     },
-    tooltip: {},
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['阅读量', '点赞量']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
     xAxis: {
-      data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+      type: 'category',
+      boundaryGap: false,
+      data: xAxis
     },
-    yAxis: {},
+    yAxis: {
+      type: 'value'
+    },
     series: [
       {
-        name: '销量',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
+        name: '总阅读量',
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        data: seriesView
+      },
+      {
+        name: '总点赞量',
+        type: 'line',
+        stack: 'Total',
+        smooth: true,
+        data: seriesVote
       }
     ]
-  });
-}
+  };
 
+  // 使用刚指定的配置项和数据显示图表。
+  myChart.setOption(option);
+  };
+
+const get30DayStatistic = () => {
+  axios.get('/ebook-snapshot/get-30-statistic').then((response) => {
+    const data = response.data;
+    console.log('data:', data);
+    if (data.success){
+      const statisticList = data.content;
+      // console.log('statisticList:', statisticList);
+      init30DayEcharts(statisticList);
+    }
+    });
+}
 
 
 onMounted(() => {
   getStatistic();
-  testEcharts();
+  get30DayStatistic();
 });
+
 
 </script>
