@@ -166,7 +166,7 @@ const init30DayEcharts = (list: any) => {
     },
     toolbox: {
       feature: {
-        saveAsImage: {}
+
       }
     },
     xAxis: {

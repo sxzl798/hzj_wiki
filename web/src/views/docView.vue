@@ -129,6 +129,13 @@ const vote = () => {
     }else {
       message.error(data.message);
     }
+  }).catch(error => {
+    if (error.response && error.response.status === 401) {
+      // 显示提示框或题型
+      message.error('请先登录');
+    } else {
+      console.error('请求失败：', error.message);
+    }
   });
 }
 
@@ -140,6 +147,11 @@ onMounted(() => {
 </script>
 
 <style>
+//图片自适应
+.editor-content-view img {
+  max-width: 100%;
+  height: auto;
+}
 .editor-content-view {
   border: 3px solid #ccc;
   border-radius: 5px;

@@ -1,12 +1,13 @@
 <template>
   <a-layout-header class="header">
+
     <a-row>
       <a-col :span="23">
     <a-menu
         theme="light"
         mode="horizontal"
         :style="{ lineHeight: '64px'}"
-        style="background-color: #f0f2f5;"
+        style="background-color: #F5EFE6;"
     >
           <a-menu-item key="/" @click="refreshPage">
             <router-link to="/">首页</router-link>
@@ -19,10 +20,10 @@
       </a-col>
     <a-col :span="1">
       <a v-show="!user.id">
-        <a-avatar style="color: #1890ff; background-color: #e6f7ff"
+        <a-avatar style="color: #E8DFCA; background-color: #4F6F52"
         @click="showLoginModal"
         >
-        User
+        U
         </a-avatar>
 
       </a>
@@ -140,6 +141,9 @@ export default defineComponent({
 
 <style scoped>
 .header {
-  background-color: #f0f2f5; /* 设置浅色背景色 */
+  background-color: #F5EFE6; /* 设置浅色背景色 */
 }
+</style>
+
+<style>
 </style>

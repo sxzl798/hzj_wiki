@@ -7,22 +7,22 @@
           @click = "handleClick"
       >
         <a-menu-item key="welcome" @click = "handleClickItem_isShowWelcome">
-<!--          <router-link to="/">-->
-            <SmileTwoTone />
+
+          <EyeFilled />
             <span>欢迎</span>
-<!--          </router-link>-->
+
 
         </a-menu-item>
 
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
             <a-button type="text" @click="handleClickItem(item.id)">
-              <TagsTwoTone /><span >{{item.name}}</span>
+              <RightOutlined /><span >{{item.name}}</span>
             </a-button>
 
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
-            <TagTwoTone /><span>{{child.name}}</span>
+            <DoubleRightOutlined /><span>{{child.name}}</span>
           </a-menu-item>
         </a-sub-menu>
       </a-menu>

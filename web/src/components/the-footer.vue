@@ -1,9 +1,9 @@
 <template>
   <a-layout-footer style="text-align: center"  class="footer">
     <P size="small" v-show="!!user.id">
-      你好，{{user.name}}
+      欢迎，{{user.name}}
     </P>
-    Design ©2023 Created by Hzzzj
+    Design ©2024 Created by Hzj
   </a-layout-footer>
 </template>
 
@@ -73,10 +73,15 @@ export default defineComponent({
 
 
 <style scoped>
-.footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
+.content-wrapper {
+  margin-bottom: 60px; /* 底部 footer 的高度 */
 }
+
+.footer {
+  padding: 20px 0;
+  background: #F5EFE6;
+  margin-top: auto; /* 让 footer 在 flex 布局中自动对齐到容器底部 */
+}
+
+
 </style>

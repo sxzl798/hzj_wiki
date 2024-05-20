@@ -1,10 +1,12 @@
 <template>
   <a-layout>
     <the-header></the-header>
-
+    <div class="app-container">
       <router-view/>
 
-    <the-footer></the-footer>
+      <the-footer/>
+    </div>
+
 
   </a-layout>
 </template>
@@ -26,13 +28,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#components-layout-demo-top-side-2 .logo {
-  float: left;
-  width: 120px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: rgba(255, 255, 255, 0.3);
-}
+
 
 .ant-row-rtl #components-layout-demo-top-side-2 .logo {
   float: right;
@@ -41,5 +37,19 @@ export default defineComponent({
 
 .site-layout-background {
   background: #fff;
+}
+
+
+</style>
+
+<style>
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 确保容器的最小高度为视窗高度 */
+}
+
+router-view {
+  flex: 1; /* 让内容区自动扩展，填满剩余空间 */
 }
 </style>
